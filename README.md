@@ -42,5 +42,5 @@ excluded. No employer data, source code or screenshots are published in this rep
 
 ## Contact
 
-- Email: jaydeepfoujdar2@gmail.com
+- Email: jaydeepfoujdar@duck.com
 - LinkedIn: https://www.linkedin.com/in/jaydeepfoujdar/
