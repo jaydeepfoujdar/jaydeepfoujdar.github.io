@@ -11,7 +11,7 @@ enterprise digitization on Power Platform, AI automation, and embedded systems.
 | File | Purpose |
 |------|---------|
 | `index.html` | The complete site — HTML, CSS and JS in one self-contained file |
-| `Jaydeep_Foujdar_Resume.pdf` | Résumé, served by the download button |
+| `Jaydeep_Foujdar_Resume.pdf` | Resume, served by the download button |
 
 ## Built with
 
