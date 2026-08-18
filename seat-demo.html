@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Power Seat &amp; Memory Recall — Interactive Demo | Jaydeep Foujdar</title>
+<meta name="description" content="An interactive power-seat simulation by Jaydeep Foujdar: drag the slider to move the seat, store memory positions, and compare sequential versus synchronised recall.">
+<style>
+:root{
+  --bg:#ffffff;--bg-alt:#f5f8fa;--bg-deep:#0d1b2a;--card:#ffffff;
+  --text:#16232e;--muted:#5b6b7a;--line:#e2e9ef;
+  --accent:#0b7285;--accent-soft:#e3f2f5;--accent-2:#c2410c;--ok:#0f766e;
+  --shadow:0 1px 2px rgba(13,27,42,.06),0 8px 24px rgba(13,27,42,.06);--radius:14px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+html[data-theme="dark"]{
+  --bg:#0d1b2a;--bg-alt:#122334;--bg-deep:#08131e;--card:#152a3d;
+  --text:#e8eef4;--muted:#9db0c2;--line:#22384d;
+  --accent:#4dd4e8;--accent-soft:#12303c;--accent-2:#fb923c;--ok:#5eead4;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);line-height:1.6;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+html[lang="ja"] body{line-height:1.75}
+.wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+.top{background:var(--bg-deep);color:#eaf2f7;padding:34px 0 30px}
+.eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#4dd4e8;margin-bottom:8px}
+.top h1{margin:0;font-size:clamp(1.45rem,3.4vw,2rem);letter-spacing:-.02em;color:#fff}
+.top p{color:#b6c6d4;margin:9px 0 0;font-size:.93rem;max-width:70ch}
+main{padding:26px 0 50px}
+.grid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px}
+.phead{padding:12px 17px;border-bottom:1px solid var(--line);background:var(--bg-alt);border-radius:13px 13px 0 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.phead h2{margin:0;font-size:.93rem}
+.phead .right{margin-left:auto;font-size:.78rem;color:var(--muted);font-family:var(--mono)}
+.pbody{padding:16px 17px}
+
+svg.stage{width:100%;height:auto;display:block;background:var(--bg-alt);border-radius:10px}
+.rail{stroke:var(--muted);stroke-width:3;stroke-linecap:round;opacity:.5}
+.tick{stroke:var(--line);stroke-width:1}
+.seatFill{fill:var(--accent);opacity:.16}
+.seatEdge{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linejoin:round}
+.seatEdge.hl{stroke:var(--accent-2)}
+.dim{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3;opacity:.6}
+.cabin{fill:none;stroke:var(--muted);stroke-width:2;opacity:.32;stroke-linecap:round}
+.seatSolid{fill:var(--bg-alt)}
+.lbl.cab{opacity:.6}
+.lbl{font-size:9px;fill:var(--muted);font-family:var(--mono)}
+
+.ctl{margin-bottom:13px}
+.ctl label{display:flex;justify-content:space-between;font-size:.79rem;font-weight:600;margin-bottom:5px}
+.ctl label span{color:var(--accent);font-family:var(--mono);font-weight:700}
+input[type=range]{width:100%;accent-color:var(--accent);height:22px}
+.mem{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.btn{
+  font:inherit;font-size:.82rem;font-weight:650;padding:9px 15px;border-radius:9px;cursor:pointer;
+  border:1px solid var(--accent);background:var(--accent);color:#fff;
+}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:var(--card);color:var(--accent)}
+.btn.small{padding:6px 11px;font-size:.75rem}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{
+  font:inherit;font-size:.78rem;font-weight:600;padding:8px 13px;border:0;cursor:pointer;
+  background:var(--card);color:var(--muted);
+}
+.seg button.on{background:var(--accent);color:#fff}
+
+.tele{font-family:var(--mono);font-size:.76rem}
+.tele .row{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px dashed var(--line)}
+.tele .row:last-child{border-bottom:none}
+.tele .k{color:var(--muted)}
+.tele .v{font-weight:700}
+.bars{margin-top:6px}
+.b{display:grid;grid-template-columns:74px 1fr 52px;gap:8px;align-items:center;font-size:.72rem;margin-bottom:5px;font-family:var(--mono)}
+.b .track{height:7px;background:var(--bg-alt);border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.b .fill{height:100%;width:0;background:var(--accent)}
+.b .fill.act{background:var(--accent-2)}
+.b .val{text-align:right;color:var(--muted)}
+
+#vel{width:100%;height:70px;display:block;background:var(--bg-alt);border:1px solid var(--line);border-radius:9px}
+#tl{width:100%;height:108px;display:block;background:var(--bg-alt);border:1px solid var(--line);border-radius:9px}
+.tlEmpty{font-size:.79rem;color:var(--muted);font-style:italic;padding:26px 6px;text-align:center;background:var(--bg-alt);border:1px dashed var(--line);border-radius:9px}
+.tlAxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:4px}
+.tlBar{fill:var(--accent);opacity:.85}
+.tlBar.run{fill:var(--accent-2)}
+.tlTrack{fill:var(--line);opacity:.35}
+.tlLbl{font-size:9px;fill:var(--muted);font-family:var(--mono)}
+.log{height:118px;overflow:auto;font-family:var(--mono);font-size:.71rem;background:var(--bg-alt);border:1px solid var(--line);border-radius:9px;padding:8px}
+.log div{padding:1px 0;color:var(--muted)}
+.log b{color:var(--accent)}
+
+.cmp{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-top:10px}
+.cmp .box{background:var(--bg-alt);border:1px solid var(--line);border-radius:10px;padding:11px;text-align:center}
+.cmp .box.good{border-color:var(--accent);background:var(--accent-soft)}
+.cmp .box b{display:block;font-size:1.25rem;letter-spacing:-.02em;color:var(--accent)}
+.cmp .box span{font-size:.7rem;color:var(--muted)}
+.cmp .vs{color:var(--accent);font-weight:700;font-size:.85rem}
+.note{margin-top:11px;padding:10px 13px;border-radius:9px;border-left:4px solid var(--accent);background:var(--accent-soft);font-size:.8rem;color:var(--muted)}
+.note b{color:var(--text)}
+
+.specs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.spec{background:var(--bg-alt);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.spec h4{margin:0 0 4px;font-size:.75rem;color:var(--accent);letter-spacing:.04em}
+.spec p{margin:0;font-size:.79rem;color:var(--muted)}
+.spec code{font-family:var(--mono);font-size:.75rem;color:var(--text)}
+.src{margin-top:11px;font-size:.72rem;color:var(--muted)}
+.src a{color:var(--accent)}
+@media(max-width:900px){ .grid{grid-template-columns:1fr} .specs{grid-template-columns:1fr} .cmp{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="eyebrow" data-t="eyebrow">Interactive demo · prototype</div>
+    <h1 data-t="h1">Power Seat &amp; Memory Recall</h1>
+    <p data-t="intro">Drag the sliders to move the seat, store a position, then recall it. Watch the speed profile — and compare moving the axes one at a time against moving them together.</p>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="grid">
+
+      <div>
+        <div class="panel">
+          <div class="phead">
+            <h2 data-t="seatH">Driver seat — side view</h2>
+            <span class="right" id="mode">MANUAL</span>
+          </div>
+          <div class="pbody">
+            <svg class="stage" viewBox="0 0 470 290" role="img" aria-label="Power seat side view inside a cabin">
+              <!-- cabin context -->
+              <line class="cabin" x1="18" y1="258" x2="452" y2="258"></line>
+              <path class="cabin" d="M36,62 L36,246"></path>
+              <path class="cabin" d="M452,198 C452,152 436,132 414,123"></path>
+              <ellipse class="cabin" cx="425" cy="150" rx="7" ry="27" transform="rotate(-16,425,150)"></ellipse>
+              <line class="cabin" x1="430" y1="173" x2="450" y2="197"></line>
+              <path class="cabin" d="M430,243 L452,233"></path>
+              <text class="lbl cab" x="404" y="112">wheel</text>
+              <text class="lbl cab" x="16" y="56">cabin rear</text>
+              <line class="rail" x1="55" y1="252" x2="415" y2="252"></line>
+              <g id="ticks"></g>
+              <g id="seat">
+                <g id="lift">
+                  <path class="seatFill" d="M0,208 L124,208 L130,236 L-6,236 Z"></path>
+                  <path class="seatEdge" d="M0,208 L124,208 L130,236 L-6,236 Z"></path>
+                  <line class="seatEdge" x1="-4" y1="243" x2="128" y2="243" stroke-width="4"></line>
+                  <line class="dim" x1="0" y1="243" x2="0" y2="252"></line>
+                  <line class="dim" x1="120" y1="243" x2="120" y2="252"></line>
+                  <g id="back">
+                    <g id="head">
+                      <line class="seatEdge" x1="16" y1="100" x2="16" y2="134" stroke-width="2.5"></line>
+                      <line class="seatEdge" x1="26" y1="100" x2="26" y2="134" stroke-width="2.5"></line>
+                      <rect class="seatSolid" x="8" y="72" width="26" height="30" rx="8"></rect>
+                      <rect class="seatFill" x="8" y="72" width="26" height="30" rx="8"></rect>
+                      <rect class="seatEdge" x="8" y="72" width="26" height="30" rx="8"></rect>
+                    </g>
+                    <path class="seatSolid" d="M0,208 L14,208 L28,104 L10,102 Z"></path>
+                    <path class="seatFill" d="M0,208 L14,208 L28,104 L10,102 Z"></path>
+                    <path class="seatEdge" d="M0,208 L14,208 L28,104 L10,102 Z"></path>
+                  </g>
+                </g>
+              </g>
+              <text class="lbl" x="55" y="270">0 mm</text>
+              <text class="lbl" x="372" y="270">240 mm</text>
+            </svg>
+
+            <div class="bars" style="margin-top:12px">
+              <div class="b"><span data-t="axSlide">Slide</span><span class="track"><span class="fill" id="bar_slide"></span></span><span class="val" id="v_slide">0</span></div>
+              <div class="b"><span data-t="axHeight">Height</span><span class="track"><span class="fill" id="bar_height"></span></span><span class="val" id="v_height">0</span></div>
+              <div class="b"><span data-t="axRecline">Recline</span><span class="track"><span class="fill" id="bar_recline"></span></span><span class="val" id="v_recline">0</span></div>
+              <div class="b"><span data-t="axHead">Headrest</span><span class="track"><span class="fill" id="bar_head"></span></span><span class="val" id="v_head">0</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="phead"><h2 data-t="velH">Motor speed profile</h2><span class="right" id="velNow">0 mm/s</span></div>
+          <div class="pbody">
+            <svg id="vel" viewBox="0 0 400 70" preserveAspectRatio="none">
+              <polyline id="velLine" fill="none" stroke="var(--accent)" stroke-width="2" points=""></polyline>
+            </svg>
+            <div class="note" data-t="velNote"><b>Soft start, soft stop.</b> The motor ramps up and down rather than switching on at full speed — smoother for the occupant and easier on the gear train.</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="phead"><h2 data-t="tlH">Which motor runs when</h2><span class="right" id="tlMode">—</span></div>
+          <div class="pbody">
+            <div id="tlEmpty" class="tlEmpty" data-t="tlEmpty">Run a memory recall to see the motor activity timeline.</div>
+            <svg id="tl" viewBox="0 0 400 108" preserveAspectRatio="none" style="display:none">
+              <g id="tlRows"></g>
+            </svg>
+            <div class="tlAxis" id="tlAxis" style="display:none"><span>0 s</span><span id="tlEnd">—</span></div>
+            <div class="note" id="tlNote" data-t="tlNote"><b>Sequential makes a staircase; synchronised makes a block.</b> Run one of each and the shape of the difference is the whole argument.</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="phead"><h2 data-t="ctlH">Controls</h2></div>
+          <div class="pbody">
+            <div class="ctl"><label data-t="lSlide">Slide (fore / aft)<span id="o_slide">120 mm</span></label>
+              <input type="range" id="s_slide" min="0" max="240" value="120"></div>
+            <div class="ctl"><label data-t="lHeight">Height<span id="o_height">30 mm</span></label>
+              <input type="range" id="s_height" min="0" max="70" value="30"></div>
+            <div class="ctl"><label data-t="lRecline">Backrest angle<span id="o_recline">22°</span></label>
+              <input type="range" id="s_recline" min="12" max="42" value="22"></div>
+            <div class="ctl"><label data-t="lHead">Headrest<span id="o_head">20 mm</span></label>
+              <input type="range" id="s_head" min="0" max="60" value="20"></div>
+            <div class="ctl" style="margin-bottom:6px"><label data-t="lSpeed">Motor speed<span id="o_speed">1.0×</span></label>
+              <input type="range" id="s_speed" min="50" max="200" value="100"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="phead"><h2 data-t="memH">Memory positions</h2></div>
+          <div class="pbody">
+            <div class="mem" id="memBtns"></div>
+            <div style="margin-top:11px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <span style="font-size:.76rem;color:var(--muted)" data-t="recallMode">Recall:</span>
+              <span class="seg">
+                <button id="m_seq" data-t="seqBtn">Sequential</button>
+                <button id="m_syn" class="on" data-t="synBtn">Synchronised</button>
+              </span>
+            </div>
+            <div class="cmp">
+              <div class="box"><b id="tSeq">—</b><span data-t="cmpSeq">Sequential</span></div>
+              <div class="vs">vs</div>
+              <div class="box good"><b id="tSyn">—</b><span data-t="cmpSyn">Synchronised</span></div>
+            </div>
+            <div class="note" id="cmpNote" data-t="cmpNote">Run a recall in each mode to compare. Sequential drives one axis at a time; synchronised drives all four together and scales each motor so they arrive at once.</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="phead"><h2 data-t="teleH">Telemetry</h2></div>
+          <div class="pbody">
+            <div class="tele">
+              <div class="row"><span class="k" data-t="tHall">Hall pulses</span><span class="v" id="t_hall">0</span></div>
+              <div class="row"><span class="k" data-t="tCur">Motor current</span><span class="v" id="t_cur">0.0 A</span></div>
+              <div class="row"><span class="k" data-t="tActive">Active motors</span><span class="v" id="t_act">0 / 4</span></div>
+              <div class="row"><span class="k" data-t="tElapsed">Elapsed</span><span class="v" id="t_time">0.0 s</span></div>
+            </div>
+            <div class="log" id="log" style="margin-top:10px"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="panel" style="margin-top:4px">
+      <div class="phead"><h2 data-t="specH">How a real power seat works</h2></div>
+      <div class="pbody">
+        <div class="specs">
+          <div class="spec"><h4 data-t="sp1h">Up to 8 powered axes</h4><p data-t="sp1p">Published seat-position-module reference designs list slide, height, cushion tilt, backrest tilt, cushion length, seat width, headrest height and headrest tilt — each driven by its own DC motor driver.</p></div>
+          <div class="spec"><h4 data-t="sp2h">Hall-effect position feedback</h4><p data-t="sp2p">There is no absolute position sensor. Hall sensors on the motor shaft emit pulses, and the module counts them to know where the seat is — which is why a memory seat must be re-calibrated if power is lost.</p></div>
+          <div class="spec"><h4 data-t="sp3h">LIN bus</h4><p data-t="sp3p">Comfort functions typically sit on LIN: a single wire, up to <code>19.2 kbit/s</code>, up to 40 m of bus. Cheap and entirely sufficient for switches and seat motors, where CAN would be overkill.</p></div>
+          <div class="spec"><h4 data-t="sp4h">The memory module</h4><p data-t="sp4p">A dedicated memory module stores each driver's settings and replays them, usually triggered by the key, the door unlock or a driver profile. Because position is a pulse count, recall is a target-and-verify loop, not an absolute jump.</p></div>
+        </div>
+        <div class="src" data-t="srcs">Built entirely from publicly documented automotive engineering material — seat position module reference designs, the LIN specification (single wire, ≤19.2 kbit/s, ≤40 m bus) and general memory-seat module documentation. Generic simulation: no employer data, code, specifications or part numbers are used.</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+(function(){
+  var LANG=(location.search.match(/[?&]lang=([a-z]{2})/i)||[])[1]==='ja'?'ja':'en';
+  document.documentElement.setAttribute('lang',LANG);
+  var el=function(id){return document.getElementById(id);};
+
+  var UI={
+    eyebrow:'体験デモ · プロトタイプ',
+    h1:'パワーシートとメモリー呼び出し',
+    intro:'スライダーでシートを動かし、位置を記憶させて呼び出してみてください。速度の変化にご注目ください。各軸を1つずつ動かす場合と、同時に動かす場合の違いも比較できます。',
+    seatH:'運転席シート ― 側面図',
+    velH:'モーター速度プロファイル',
+    velNote:'<b>ソフトスタート・ソフトストップ。</b>いきなり全速で動かすのではなく、加速と減速を設けています。乗員にとって滑らかで、ギヤ機構への負担も抑えられます。',
+    ctlH:'操作',
+    lSlide:'スライド（前後）', lHeight:'高さ', lRecline:'背もたれ角度', lHead:'ヘッドレスト', lSpeed:'モーター速度',
+    memH:'メモリー位置', recallMode:'呼び出し方式：',
+    seqBtn:'順次', synBtn:'同時',
+    cmpSeq:'順次', cmpSyn:'同時',
+    cmpNote:'両方の方式で呼び出すと比較できます。順次は1軸ずつ動かし、同時は4軸すべてを並行して動かしたうえで、各モーターの速度を調整して同時に到達させます。',
+    teleH:'テレメトリー',
+    tHall:'ホールパルス', tCur:'モーター電流', tActive:'稼働モーター', tElapsed:'経過時間',
+    axSlide:'スライド', axHeight:'高さ', axRecline:'角度', axHead:'ヘッド',
+    tlH:'どのモーターがいつ動くか',
+    tlEmpty:'メモリー呼び出しを実行すると、モーターの稼働タイムラインが表示されます。',
+    tlNote:'<b>順次は階段状、同時はひとつの塊になります。</b>両方を試すと、その形の違いがそのまま答えになります。',
+    specH:'実際のパワーシートの仕組み',
+    sp1h:'最大8軸の電動調整',
+    sp1p:'公開されているシートポジションモジュールのリファレンス設計では、スライド、高さ、座面チルト、背もたれ角度、座面長、シート幅、ヘッドレスト高さ、ヘッドレスト角度が挙げられており、それぞれに専用のDCモータードライバーが割り当てられています。',
+    sp2h:'ホール素子による位置検出',
+    sp2p:'絶対位置センサーはありません。モーター軸のホール素子が出すパルスをモジュールが数えることで現在位置を把握します。電源が失われるとメモリーシートの再校正が必要になるのは、このためです。',
+    sp3h:'LINバス',
+    sp3p:'快適装備は一般にLINバス上に置かれます。単線で最大<code>19.2 kbit/s</code>、バス長は最大40mです。スイッチやシートモーターにはCANでは過剰であり、LINで十分です。',
+    sp4h:'メモリーモジュール',
+    sp4p:'専用のメモリーモジュールが運転者ごとの設定を保存し、再現します。多くはキー、ドア解錠、運転者プロファイルと連動します。位置はパルス数で管理されるため、呼び出しは絶対値への一足飛びではなく、目標へ動かしながら確認する制御になります。',
+    srcs:'本デモは公開されている自動車技術情報のみに基づいています（シートポジションモジュールのリファレンス設計、LIN規格：単線・最大19.2 kbit/s・バス長最大40m、一般的なメモリーシートモジュールの資料）。一般化したシミュレーションであり、在職企業のデータ・コード・仕様・型番は一切含みません。'
+  };
+  var T={
+    en:{manual:'MANUAL',recall:'RECALL',mem:'M',store:'Store',stored:function(i){return 'M'+i+' stored';},
+        recallStart:function(i,m){return 'Recall M'+i+' — '+m+' mode';},
+        arrive:function(t){return 'Position reached in '+t+' s';},
+        saving:function(a,b,p){return '<b>Synchronised is '+p+'% faster.</b> Sequential took '+a+' s, synchronised '+b+' s. Driving every axis at once — and scaling each motor so they finish together — is the single biggest lever on recall time.';},
+        seqMode:'sequential',synMode:'synchronised',
+        linStore:'LIN 0x2C  SEAT_MEM_STORE',linReq:'LIN 0x2D  SEAT_POS_REQ',linAck:'LIN 0x2E  SEAT_POS_ACK'},
+    ja:{manual:'手動',recall:'呼び出し',mem:'M',store:'記憶',stored:function(i){return 'M'+i+' に記憶しました';},
+        recallStart:function(i,m){return 'M'+i+' を呼び出し ― '+m+'方式';},
+        arrive:function(t){return t+' 秒で到達しました';},
+        saving:function(a,b,p){return '<b>同時方式が '+p+'％高速です。</b>順次方式は '+a+' 秒、同時方式は '+b+' 秒でした。全軸を同時に動かし、各モーターの速度を調整して同時に到達させることが、呼び出し時間を短縮する最大の要因です。';},
+        seqMode:'順次',synMode:'同時',
+        linStore:'LIN 0x2C  SEAT_MEM_STORE',linReq:'LIN 0x2D  SEAT_POS_REQ',linAck:'LIN 0x2E  SEAT_POS_ACK'}
+  }[LANG];
+
+  if(LANG==='ja'){
+    for(var k in UI){ var nd=document.querySelector('[data-t="'+k+'"]');
+      if(nd){ if(nd.tagName==='LABEL'){ nd.childNodes[0].nodeValue=UI[k]; } else nd.innerHTML=UI[k]; } }
+    document.title='パワーシートとメモリー呼び出し ― 体験デモ | Jaydeep Foujdar';
+  }
+
+  // ---- axis model: mm (or degrees), speeds are realistic-order, not vehicle-specific ----
+  var AX={
+    slide:  {min:0,max:240,val:120,tgt:120,v:0,vmax:26,acc:70,unit:'mm',pulses:12},
+    height: {min:0,max:70, val:30, tgt:30, v:0,vmax:12,acc:40,unit:'mm',pulses:18},
+    recline:{min:12,max:42,val:22, tgt:22, v:0,vmax:7, acc:24,unit:'°', pulses:22},
+    head:   {min:0,max:60, val:20, tgt:20, v:0,vmax:16,acc:55,unit:'mm',pulses:14}
+  };
+  var KEYS=['slide','height','recline','head'];
+  var AXLBL={en:{slide:'Slide',height:'Height',recline:'Recline',head:'Headrest'},
+             ja:{slide:'スライド',height:'高さ',recline:'角度',head:'ヘッド'}}[LANG];
+  var seg={}, tlTotal=0;
+  var MEM=[{slide:200,height:52,recline:18,head:46},{slide:70,height:16,recline:27,head:8},{slide:150,height:34,recline:38,head:30}];
+
+  var speedMul=1, recalling=false, seqQueue=null, tStart=0, elapsed=0, hall=0;
+  var times={seq:null,syn:null}, mode='syn', velHist=[];
+
+  // memory buttons
+  var mb=el('memBtns');
+  MEM.forEach(function(_,i){
+    var b=document.createElement('button'); b.className='btn'; b.textContent='M'+(i+1);
+    b.onclick=function(){ recall(i); };
+    mb.appendChild(b);
+    var st=document.createElement('button'); st.className='btn ghost small'; st.textContent=T.store+' M'+(i+1);
+    st.onclick=function(){
+      KEYS.forEach(function(k){ MEM[i][k]=AX[k].val; });
+      log(T.linStore,T.stored(i+1));
+    };
+    mb.appendChild(st);
+  });
+
+  function log(code,msg){
+    var d=document.createElement('div');
+    d.innerHTML='<b>'+code+'</b> · '+msg;
+    el('log').appendChild(d); el('log').scrollTop=el('log').scrollHeight;
+  }
+
+  function recall(i){
+    if(recalling) return;
+    KEYS.forEach(function(k){ AX[k].tgt=Math.max(AX[k].min,Math.min(AX[k].max,MEM[i][k])); });
+    recalling=true; tStart=performance.now(); elapsed=0; velHist=[];
+    seg={}; KEYS.forEach(function(k){ seg[k]={s:null,e:null}; }); tlTotal=0;
+    el('tlEmpty').style.display='none'; el('tl').style.display='block'; el('tlAxis').style.display='flex';
+    el('tlMode').textContent=(mode==='seq'?T.seqMode:T.synMode).toUpperCase();
+    el('mode').textContent=T.recall;
+    log(T.linReq,T.recallStart(i+1, mode==='seq'?T.seqMode:T.synMode));
+    if(mode==='seq'){
+      seqQueue=KEYS.slice();
+      KEYS.forEach(function(k){ AX[k].hold=(k!==seqQueue[0]); });
+    } else {
+      // scale each motor so every axis finishes together (longest axis sets the pace)
+      var tmax=0;
+      KEYS.forEach(function(k){ var a=AX[k]; a.hold=false; tmax=Math.max(tmax,Math.abs(a.tgt-a.val)/a.vmax); });
+      KEYS.forEach(function(k){ var a=AX[k]; var d=Math.abs(a.tgt-a.val);
+        a.scale=(tmax>0&&d>0)?(d/tmax)/a.vmax:1; });
+      seqQueue=null;
+    }
+  }
+
+  function setMode(m){
+    mode=m;
+    el('m_seq').className=(m==='seq')?'on':''; el('m_syn').className=(m==='syn')?'on':'';
+  }
+  el('m_seq').onclick=function(){ setMode('seq'); };
+  el('m_syn').onclick=function(){ setMode('syn'); };
+
+  // sliders
+  KEYS.forEach(function(k){
+    var s=el('s_'+(k==='head'?'head':k));
+    s.addEventListener('input',function(){
+      if(recalling) return;
+      AX[k].tgt=+s.value;
+    });
+  });
+  el('s_speed').addEventListener('input',function(){
+    speedMul=(+this.value)/100;
+    el('o_speed').textContent=speedMul.toFixed(1)+'×';
+  });
+
+  function fmt(k){
+    var a=AX[k];
+    return (a.unit==='°')?(a.val.toFixed(0)+'°'):(a.val.toFixed(0)+' mm');
+  }
+
+  var last=performance.now();
+  function frame(now){
+    var dt=Math.min(0.05,(now-last)/1000); last=now;
+    var moving=0, totV=0;
+
+    KEYS.forEach(function(k){
+      var a=AX[k];
+      var d=a.tgt-a.val, dist=Math.abs(d);
+      var cap=(a.vmax*speedMul)*((recalling&&mode==='syn'&&a.scale)?a.scale:1);
+      if(a.hold){ a.v=0; return; }
+      if(dist<0.05){ a.val=a.tgt; a.v=0; return; }
+      // trapezoidal profile: decelerate approaching target, otherwise ramp up
+      var vStop=Math.sqrt(Math.max(0,2*a.acc*speedMul*dist));
+      var want=Math.min(cap,vStop);
+      a.v += Math.max(-a.acc*speedMul*dt*2,Math.min(a.acc*speedMul*dt, want-a.v));
+      a.v=Math.max(0,Math.min(cap,a.v));
+      var stepv=Math.min(a.v*dt,dist);
+      a.val += Math.sign(d)*stepv;
+      hall += stepv*a.pulses;
+      moving++; totV+=a.v;
+      if(recalling&&seg[k]){ if(seg[k].s===null) seg[k].s=elapsed; seg[k].e=elapsed; }
+    });
+
+    // sequential: advance queue when current axis lands
+    if(recalling&&seqQueue){
+      var cur=seqQueue[0];
+      if(cur&&Math.abs(AX[cur].tgt-AX[cur].val)<0.05){
+        seqQueue.shift();
+        if(seqQueue.length){ KEYS.forEach(function(k){ AX[k].hold=(k!==seqQueue[0]); }); }
+      }
+    }
+    if(recalling){
+      elapsed=(now-tStart)/1000;
+      var done=KEYS.every(function(k){ return Math.abs(AX[k].tgt-AX[k].val)<0.05; });
+      if(done){
+        recalling=false; seqQueue=null; tlTotal=elapsed;
+        KEYS.forEach(function(k){ AX[k].hold=false; AX[k].scale=1; });
+        el('mode').textContent=T.manual;
+        log(T.linAck,T.arrive(elapsed.toFixed(1)));
+        times[mode==='seq'?'seq':'syn']=elapsed;
+        el('tSeq').textContent=times.seq?times.seq.toFixed(1)+' s':'—';
+        el('tSyn').textContent=times.syn?times.syn.toFixed(1)+' s':'—';
+        if(times.seq&&times.syn){
+          var p=Math.round((1-times.syn/times.seq)*100);
+          el('cmpNote').innerHTML=T.saving(times.seq.toFixed(1),times.syn.toFixed(1),p);
+        }
+        // sync sliders back
+        KEYS.forEach(function(k){ el('s_'+k).value=Math.round(AX[k].val); });
+      }
+    }
+
+    // velocity trace (slide axis is the reference)
+    velHist.push(Math.min(1,totV/(AX.slide.vmax*2)));
+    if(velHist.length>200) velHist.shift();
+    el('velLine').setAttribute('points',velHist.map(function(v,i){
+      return (i*(400/200)).toFixed(1)+','+(66-v*60).toFixed(1);
+    }).join(' '));
+    el('velNow').textContent=totV.toFixed(1)+' mm/s';
+
+    // motor activity timeline
+    if(seg&&KEYS.some(function(k){return seg[k]&&seg[k].s!==null;})){
+      var span=Math.max(0.4, recalling?elapsed:tlTotal);
+      var rows='';
+      KEYS.forEach(function(k,i){
+        var y=8+i*25, g=seg[k]||{};
+        rows+='<rect class="tlTrack" x="62" y="'+(y+4)+'" width="330" height="11" rx="5"></rect>';
+        if(g.s!==null&&g.s!==undefined){
+          var x=62+(g.s/span)*330, w=Math.max(3,((g.e-g.s)/span)*330);
+          if(x+w>392) w=392-x;
+          rows+='<rect class="tlBar'+(recalling&&AX[k].v>0.2?' run':'')+'" x="'+x.toFixed(1)+'" y="'+(y+4)+'" width="'+w.toFixed(1)+'" height="11" rx="5"></rect>';
+        }
+        rows+='<text class="tlLbl" x="6" y="'+(y+13)+'">'+AXLBL[k]+'</text>';
+      });
+      el('tlRows').innerHTML=rows;
+      el('tlEnd').textContent=span.toFixed(1)+' s';
+    }
+
+    // render seat
+    var sl=AX.slide.val, ht=AX.height.val, rc=AX.recline.val, hd=AX.head.val;
+    el('seat').setAttribute('transform','translate('+(58+sl*0.93)+',0)');
+    el('lift').setAttribute('transform','translate(0,'+(-ht*0.55)+')');
+    el('back').setAttribute('transform','rotate('+(rc-22)+',7,208)');
+    el('head').setAttribute('transform','translate(0,'+(-hd*0.35)+')');
+
+    KEYS.forEach(function(k){
+      var a=AX[k], pct=((a.val-a.min)/(a.max-a.min))*100;
+      var f=el('bar_'+k); f.style.width=pct.toFixed(0)+'%';
+      f.className='fill'+(a.v>0.2?' act':'');
+      el('v_'+k).textContent=fmt(k);
+      el('o_'+k).textContent=fmt(k);
+      if(!recalling){} else el('s_'+k).value=Math.round(a.val);
+    });
+
+    el('t_hall').textContent=Math.round(hall).toLocaleString();
+    el('t_cur').textContent=(moving?(1.4+totV*0.06+Math.random()*0.25):0).toFixed(1)+' A';
+    el('t_act').textContent=moving+' / 4';
+    el('t_time').textContent=(recalling?elapsed:0).toFixed(1)+' s';
+
+    requestAnimationFrame(frame);
+  }
+
+  // ruler ticks
+  var ticks='';
+  for(var i=0;i<=6;i++){ var x=55+i*60; ticks+='<line class="tick" x1="'+x+'" y1="252" x2="'+x+'" y2="258"></line>'; }
+  el('ticks').innerHTML=ticks;
+
+  if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)
+    document.documentElement.setAttribute('data-theme','dark');
+  setMode('syn');
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

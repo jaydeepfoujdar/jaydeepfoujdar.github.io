@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop-Floor Defect Workflow — Interactive Simulator | Jaydeep Foujdar</title>
+<meta name="description" content="An interactive simulation by Jaydeep Foujdar of a five-stage, gated defect-tracking workflow: barcode capture, staged repair, verification and final judgement — one traceable record.">
+<style>
+:root{
+  --bg:#ffffff;--bg-alt:#f5f8fa;--bg-deep:#0d1b2a;--card:#ffffff;
+  --text:#16232e;--muted:#5b6b7a;--line:#e2e9ef;
+  --accent:#0b7285;--accent-soft:#e3f2f5;--accent-2:#c2410c;--ok:#0f766e;--warn:#b45309;--bad:#b91c1c;
+  --shadow:0 1px 2px rgba(13,27,42,.06),0 8px 24px rgba(13,27,42,.06);--radius:14px;
+}
+html[data-theme="dark"]{
+  --bg:#0d1b2a;--bg-alt:#122334;--bg-deep:#08131e;--card:#152a3d;
+  --text:#e8eef4;--muted:#9db0c2;--line:#22384d;
+  --accent:#4dd4e8;--accent-soft:#12303c;--accent-2:#fb923c;--ok:#5eead4;--warn:#fbbf24;--bad:#fca5a5;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+.top{background:var(--bg-deep);color:#eaf2f7;padding:44px 0 40px}
+.eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#4dd4e8;margin-bottom:10px}
+.top h1{margin:0;font-size:clamp(1.55rem,3.6vw,2.15rem);letter-spacing:-.02em;color:#fff}
+.top p{color:#b6c6d4;max-width:74ch;margin:14px 0 0}
+.demo-note{
+  display:inline-flex;gap:9px;align-items:flex-start;margin-top:18px;padding:11px 15px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:10px;
+  font-size:.82rem;color:#c8d6e2;max-width:76ch;
+}
+main{padding:32px 0 60px}
+
+.stages{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.st{
+  flex:1 1 165px;border:1px solid var(--line);border-top:3px solid var(--line);border-radius:10px;
+  background:var(--card);padding:10px 12px;text-align:left;cursor:pointer;font:inherit;color:var(--text);
+  position:relative;
+}
+.st small{display:block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.st b{display:block;font-size:.83rem;margin-top:2px}
+.st .lock{position:absolute;top:9px;right:10px;font-size:.8rem;opacity:.55}
+.st.done{border-top-color:var(--ok);background:var(--accent-soft)}
+.st.now{border-top-color:var(--accent-2);box-shadow:0 0 0 3px var(--accent-soft)}
+.st.locked{opacity:.62}
+.st.skipped{border-top-color:var(--line);opacity:.45}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.st.deny{animation:shake .3s ease;border-color:var(--bad)}
+
+.cols{display:grid;grid-template-columns:1.45fr 1fr;gap:18px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.phead{padding:14px 18px;border-bottom:1px solid var(--line);background:var(--bg-alt);border-radius:13px 13px 0 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.phead h2{margin:0;font-size:.98rem}
+.role{margin-left:auto;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;background:var(--accent);color:#fff}
+.pbody{padding:18px}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:.78rem;font-weight:650;margin-bottom:6px}
+select,input[type=text]{
+  width:100%;font:inherit;font-size:.88rem;padding:10px 12px;border:1px solid var(--line);
+  border-radius:9px;background:var(--bg);color:var(--text);
+}
+select:focus,input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.btn{
+  font:inherit;font-size:.88rem;font-weight:650;padding:11px 18px;border-radius:9px;cursor:pointer;
+  border:1px solid var(--accent);background:var(--accent);color:#fff;
+}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:var(--card);color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.scan{
+  border:1px dashed var(--accent);border-radius:11px;padding:16px;text-align:center;background:var(--accent-soft);
+}
+.scan .code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:1rem;font-weight:700;color:var(--accent);letter-spacing:.06em}
+.photo{
+  width:78px;height:60px;border-radius:8px;border:1px dashed var(--line);background:var(--bg-alt);
+  display:grid;place-items:center;font-size:1.3rem;color:var(--muted);
+}
+.photo.has{border-style:solid;border-color:var(--ok);background:var(--accent-soft);color:var(--ok)}
+.err{
+  display:none;margin-top:12px;padding:11px 14px;border-radius:9px;border-left:4px solid var(--bad);
+  background:var(--bg-alt);font-size:.84rem;color:var(--muted);
+}
+.err.on{display:block}
+.err b{color:var(--bad)}
+.gate{
+  margin-top:14px;padding:11px 14px;border-radius:9px;border-left:4px solid var(--accent);
+  background:var(--accent-soft);font-size:.82rem;color:var(--muted);
+}
+.gate b{color:var(--accent)}
+
+.rec{font-size:.82rem}
+.rec .line{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.rec .line:last-child{border-bottom:none}
+.rec .k{color:var(--muted)}
+.rec .v{font-weight:650;text-align:right}
+.rec .v.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78rem}
+.pending{color:var(--muted);font-weight:400;font-style:italic}
+.log{margin-top:16px;max-height:210px;overflow:auto}
+.log .e{display:flex;gap:9px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:.77rem}
+.log .e:last-child{border-bottom:none}
+.log .t{color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;flex:none}
+.log .who{color:var(--accent);font-weight:650;flex:none}
+.log .what{color:var(--muted)}
+
+.done-card{
+  margin-top:18px;padding:18px;border-radius:12px;border:1px solid var(--line);
+  border-left:5px solid var(--ok);background:var(--bg-alt);display:none;
+}
+.done-card.on{display:block}
+.done-card h3{margin:0 0 8px;font-size:1.02rem}
+.done-card p{margin:0 0 12px;font-size:.87rem;color:var(--muted)}
+.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.mini div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px;text-align:center}
+.mini b{display:block;font-size:1.05rem;color:var(--accent)}
+.mini span{font-size:.72rem;color:var(--muted)}
+.note{margin-top:22px;background:var(--bg-alt);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.note h3{margin:0 0 9px;font-size:1rem}
+.note p,.note li{color:var(--muted);font-size:.87rem}
+.note ul{margin:8px 0 0;padding-left:20px}
+.note li{margin-bottom:6px}
+.note strong{color:var(--text)}
+@media(max-width:840px){ .cols{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="eyebrow" data-t="eyebrow">Interactive demo · prototype</div>
+    <h1 data-t="h1">Shop-Floor Defect Workflow Simulator</h1>
+    <p data-t="intro">
+      Step onto the line as the operator. Register a part, repair it, verify it, and close it out —
+      and try to cut a corner along the way. This is a working miniature of the staged, gated
+      workflow behind the tablet application I designed to replace a paper process.
+    </p>
+    <div class="demo-note">
+      <span>🔒</span>
+      <span data-t="privacy">
+        Generic simulation, running entirely in your browser. Categories, values and identifiers here
+        are illustrative only — no employer system names, defect codes, line identifiers or
+        operational data are used.
+      </span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <div class="stages" id="stages"></div>
+
+    <div class="cols">
+
+      <div class="panel">
+        <div class="phead">
+          <h2 id="stTitle">Stage 1 — Defect report</h2>
+          <span class="role" id="role">Reporter</span>
+        </div>
+        <div class="pbody" id="stBody"></div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="phead"><h2 data-t="recH">The record</h2><span class="role" id="recState">Open</span></div>
+          <div class="pbody">
+            <div class="rec" id="rec"></div>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:18px">
+          <div class="phead"><h2 data-t="logH">Audit trail</h2></div>
+          <div class="pbody">
+            <div class="log" id="log"><span class="pending">Nothing recorded yet.</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="done-card" id="doneCard">
+      <h3 data-t="doneH">Record closed — fully traceable</h3>
+      <p id="doneMsg"></p>
+      <div class="mini">
+        <div><b id="m1">0</b><span data-t="m1l">Stages completed</span></div>
+        <div><b id="m2">0</b><span data-t="m2l">Skip attempts blocked</span></div>
+        <div><b id="m3">1</b><span data-t="m3l">Record, not 4 paper slips</span></div>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="again" data-t="againBtn">Run another part</button>
+      </div>
+    </div>
+
+    <div class="note">
+      <h3 data-t="noteH">What the simulation is demonstrating</h3>
+      <ul data-t="noteList">
+        <li><strong>Stage gating.</strong> Each record carries a status, and every screen checks it before accepting input. That single rule is what makes the data trustworthy — steps cannot be skipped, repeated or completed out of order, no matter how busy the line is.</li>
+        <li><strong>One record, not four slips.</strong> The defect report, the repair, the verification and the final judgement all attach to one tracking ID, so a question about a part has exactly one answer.</li>
+        <li><strong>Master-data-driven input.</strong> Every field is a selection from a governed list, never free text — which is what keeps the captured data clean enough to analyse later.</li>
+        <li><strong>Role accountability.</strong> Reporter, repairer and inspector are captured separately at each stage, because a shared shop-floor tablet still has to answer “who did this”.</li>
+        <li><strong>The rework path.</strong> When verification fails, the record routes to a second repair pass rather than closing — the failure is part of the designed flow, not an exception someone handles off-system.</li>
+      </ul>
+    </div>
+
+  </div>
+</main>
+
+<script>
+(function(){
+  var LANG=(location.search.match(/[?&]lang=([a-z]{2})/i)||[])[1]==='ja'?'ja':'en';
+  document.documentElement.setAttribute('lang',LANG);
+  var UI={"eyebrow": "体験デモ · プロトタイプ", "h1": "現場不良ワークフロー シミュレーター", "intro": "作業者として生産ラインに立ち、部品を登録し、手直しし、確認して記録を完了させてみてください。途中で工程を飛ばそうとすると、どうなるかもお試しいただけます。紙の運用を置き換えるために設計したタブレットアプリの、工程管理の仕組みを小さく再現したものです。", "privacy": "一般化したシミュレーションで、すべてブラウザー内で動作します。区分・数値・識別子はすべて説明用の架空のもので、在職企業のシステム名、不良コード、ライン識別情報、稼働データは一切使用しておりません。", "recH": "記録", "logH": "操作履歴", "doneH": "記録完了 ― 追跡可能な状態です", "m1l": "完了した工程", "m2l": "阻止された工程飛ばし", "m3l": "紙4枚ではなく、記録1件", "againBtn": "別の部品で試す", "noteH": "このシミュレーションで示していること", "noteList": "<li><strong>工程のチェック機能。</strong>各記録は状態を保持し、すべての画面が入力前にその状態を検証します。この一つのルールこそが、データの信頼性を支えています。現場がどれだけ多忙でも、工程の飛ばし・重複・順序の入れ替わりは起こりません。</li><li><strong>紙4枚ではなく、記録1件。</strong>不良の報告、手直し、検証、最終判定のすべてが1つの追跡IDに紐付くため、部品に関する問い合わせに対する答えが常に一つに定まります。</li><li><strong>マスタ連動の入力。</strong>すべての項目が自由入力ではなくマスタからの選択です。これが、後から分析できる品質のデータを保つ前提になります。</li><li><strong>役割ごとの責任。</strong>報告者・手直し担当者・確認者を工程ごとに別々に記録します。現場で共用するタブレットでも、「誰が行ったか」に答えられる必要があるためです。</li><li><strong>再手直しの経路。</strong>確認で不合格となった記録は、完了せず2回目の手直しへ回ります。不合格は例外処理ではなく、設計に組み込まれた流れの一部です。</li>"};
+  var TJA={"stages": [{"n": "工程1", "t": "不良の報告", "role": "報告者"}, {"n": "工程2", "t": "手直し（1回目）", "role": "手直し担当"}, {"n": "工程3", "t": "測定による確認", "role": "確認者"}, {"n": "工程4", "t": "手直し（2回目）", "role": "手直し担当"}, {"n": "工程5", "t": "最終判定", "role": "確認者"}], "category": ["表面仕上げ", "組付け精度", "締結", "材料", "外観"], "location": ["工程A", "工程B", "工程C", "最終組立"], "cause": ["工具の摩耗", "材料のばらつき", "取扱いによる損傷", "設定のずれ", "仕入部品"], "action": ["調整して再組付け", "部品交換", "締結し直し", "表面手直し", "組付けの再調整"], "verdict": ["合格 ― ラインへ戻す", "手直し完了 ― 合格", "保留 ― 要確認", "廃棄"], "rReporter": "報告者", "rRepairer": "手直し担当", "rInspector": "確認者", "lCat": "不良区分", "lLoc": "発生工程", "lCause": "原因分類", "lAction": "処置内容", "lVerdict": "最終判定", "lPhotoBefore": "写真（手直し前）", "lPhotoAfter": "写真（手直し後）", "capture": "写真を撮影", "retake": "撮り直す", "selectPh": "選択してください…", "scanned": "読み取り完了", "scanPrompt": "部品ラベルを読み取ると記録が始まります", "scanBtn": "部品ラベルを読み取る", "submitReport": "不良報告を登録", "closeBtn": "記録を完了する", "runMeas": "測定を実行", "contPass": "工程5（最終判定）へ進む", "contFail": "工程4（2回目の手直し）へ進む", "pass": "合格", "fail": "不合格", "passUp": "合格", "failUp": "不合格", "recClosed": "完了", "recOpen": "進行中", "recNone": "未開始", "pending": "未入力", "logEmpty": "まだ記録はありません。", "fTrack": "追跡ID", "fPart": "部品", "fCat": "不良区分", "fLoc": "発生工程", "fCause1": "原因（1回目）", "fAct1": "処置（1回目）", "fMeas": "測定結果", "fAct2": "処置（2回目）", "fVerdict": "最終判定", "fPhotos": "写真", "gate1": "<b>工程のチェック機能が有効です。</b>上の後工程をクリックしてみてください。記録の状態が、それを受け付けません。", "gate2": "<b>担当は変わっても、記録は同じ。</b>手直し担当者は報告者とは別に記録されます。タブレットは共用でも、責任の所在は共用しません。", "gate5": "<b>1件の記録として完結します。</b>報告・手直し・検証・判定のすべてが同じ追跡IDに紐付きます。書類棚を探すのではなく、その場で検索できます。", "err1": "<b>入力が不足しています。</b>この工程を進めるには、区分・発生工程・写真のすべてが必要です。検証は記録を書き込む前に行われ、後からではありません。", "err2": "<b>入力が不足しています。</b>手直しを記録するには、原因・処置・写真が必要です。", "err5": "<b>入力が不足しています。</b>記録を完了するには、最終判定の入力が必要です。", "measIntro": "客観的な確認を行います。合格であれば最終判定へ、不合格であれば2回目の手直しへ回ります。この再手直しの経路は例外処理ではなく、設計に組み込まれた流れです。", "closedNote": "この記録は完了しています。別の部品を開始すると、もう一度最初から試せます。", "doneMsg": "", "m3": "1"};
+
+
+  var TEN={
+    stages:[{n:'Stage 1',t:'Defect report',role:'Reporter'},{n:'Stage 2',t:'Repair \u2014 pass 1',role:'Repairer'},
+            {n:'Stage 3',t:'Measurement check',role:'Inspector'},{n:'Stage 4',t:'Repair \u2014 pass 2',role:'Repairer'},
+            {n:'Stage 5',t:'Final judgement',role:'Inspector'}],
+    category:['Surface finish','Assembly fit','Fastening','Material','Appearance'],
+    location:['Station A','Station B','Station C','Final assembly'],
+    cause:['Tooling wear','Material variation','Handling damage','Setting drift','Supplier part'],
+    action:['Adjust and refit','Replace component','Re-secure fastener','Surface rework','Re-align assembly'],
+    verdict:['Accept \u2014 return to line','Rework complete \u2014 accept','Quarantine for review','Scrap'],
+    rReporter:'Reporter', rRepairer:'Repairer', rInspector:'Inspector',
+    lCat:'Defect category', lLoc:'Process location', lCause:'Cause classification', lAction:'Repair action', lVerdict:'Final disposition',
+    lPhotoBefore:'Photo evidence (before)', lPhotoAfter:'Photo evidence (after)',
+    capture:'Capture photo', retake:'Retake photo', selectPh:'Select\u2026',
+    scanned:'Scanned', scanPrompt:'Scan the part label to open a record', scanBtn:'Scan part label',
+    submitReport:'Submit defect report', closeBtn:'Close the record', runMeas:'Run measurement',
+    contPass:'Continue to Stage 5 \u2014 final judgement', contFail:'Continue to Stage 4 \u2014 second repair pass',
+    pass:'Pass', fail:'Fail', passUp:'PASS', failUp:'FAIL',
+    recClosed:'Closed', recOpen:'In progress', recNone:'Not opened', pending:'pending', logEmpty:'Nothing recorded yet.',
+    fTrack:'Tracking ID', fPart:'Part', fCat:'Defect category', fLoc:'Location', fCause1:'Cause (pass 1)', fAct1:'Action (pass 1)',
+    fMeas:'Measurement', fAct2:'Action (pass 2)', fVerdict:'Final disposition', fPhotos:'Photos',
+    gate1:'<b>Stage gating is live.</b> Try clicking a later stage above \u2014 the record\u2019s status will refuse it.',
+    gate2:'<b>Different role, same record.</b> The repairer is captured separately from the reporter \u2014 the tablet is shared, the accountability is not.',
+    gate5:'<b>One record, complete.</b> Report, repair, verification and judgement all resolve to the same tracking ID \u2014 instantly queryable instead of filed in a folder.',
+    err1:'<b>Incomplete.</b> Category, location and photo evidence are all required before this stage can advance. Validation happens before the record is written, never after.',
+    err2:'<b>Incomplete.</b> Cause, action and photo evidence are required before the repair can be recorded.',
+    err5:'<b>Incomplete.</b> A disposition is required to close the record.',
+    measIntro:'Run the objective check. A pass sends the record to final judgement; a fail routes it to a second repair pass \u2014 the rework path is part of the flow, not an exception.',
+    closedNote:'This record is closed. Start another part to run the workflow again.'
+  };
+  var T=(LANG==='ja')?TJA:TEN;
+  T.submitRepair=(LANG==='ja')?function(p){return '\u624b\u76f4\u3057\u3092\u767b\u9332\uff08'+p+'\u56de\u76ee\uff09';}
+                             :function(p){return 'Submit repair ('+(p===1?'first':'second')+' pass)';};
+  T.trackIssued=(LANG==='ja')?function(t){return '\u8ffd\u8de1ID '+t+' \u3092\u767a\u884c\u3057\u307e\u3057\u305f';}
+                            :function(t){return 'Tracking ID '+t+' issued';};
+  T.measured=(LANG==='ja')?function(v){return '\u6e2c\u5b9a\u5024 '+v+' mm \u00b7 \u516c\u5dee \u00b10.50 mm';}
+                         :function(v){return 'Measured '+v+' mm \u00b7 tolerance \u00b10.50 mm';};
+  T.photoN=(LANG==='ja')?function(n){return n+'\u679a\u6dfb\u4ed8';}:function(n){return n+' attached';};
+  T.doneMsg=(LANG==='ja')?'\u3053\u306e\u5de5\u7a0b\u306f\u65e2\u306b\u5b8c\u4e86\u3057\u3066\u3044\u307e\u3059\u3002\u8a18\u9332\u306f\u8ffd\u8a18\u306e\u307f\u3067\u3001\u5b8c\u4e86\u3057\u305f\u5de5\u7a0b\u3092\u73fe\u5834\u304b\u3089\u958b\u304d\u76f4\u3059\u3053\u3068\u306f\u3067\u304d\u307e\u305b\u3093\u3002'
+                        :'This stage is already complete. Records are append-only \u2014 a completed stage cannot be re-opened from the floor.';
+  T.blocked=(LANG==='ja')?function(i){var need=(i===3)?'\u6e2c\u5b9a\u3067\u4e0d\u5408\u683c\u3068\u306a\u308b\u3053\u3068':'\u5de5\u7a0b'+i+'\u306e\u5b8c\u4e86';
+      return '<b>\u5de5\u7a0b\u30c1\u30a7\u30c3\u30af\u306b\u3088\u308a\u30d6\u30ed\u30c3\u30af\u3055\u308c\u307e\u3057\u305f\u3002</b>\u3053\u306e\u8a18\u9332\u306e\u72b6\u614b\u3067\u306f\u3001\u307e\u3060\u5de5\u7a0b'+(i+1)+'\u306b\u9032\u3081\u307e\u305b\u3093\u3002'+need+'\u304c\u5fc5\u8981\u3067\u3059\u3002\u3059\u3079\u3066\u306e\u753b\u9762\u304c\u5165\u529b\u524d\u306b\u73fe\u5728\u306e\u5de5\u7a0b\u3092\u691c\u8a3c\u3059\u308b\u305f\u3081\u3001\u9806\u5e8f\u3092\u5d29\u3059\u3053\u3068\u306f\u3067\u304d\u307e\u305b\u3093\u3002';}
+    :function(i){var need=(i===3)?'a failed measurement check':'Stage '+i+' to be completed first';
+      return '<b>Blocked by stage gating.</b> This record\u2019s status does not allow Stage '+(i+1)+' yet \u2014 it requires '+need+'. The screen validates the record\u2019s current stage before accepting any input, so the sequence cannot be broken.';};
+  T.logScan=(LANG==='ja')?function(t){return '\u90e8\u54c1\u3092\u8aad\u307f\u53d6\u308a \u2015 \u8a18\u9332\u3092\u958b\u59cb\u3001\u8ffd\u8de1ID '+t;}
+                        :function(t){return 'Part scanned \u2014 record opened, tracking ID '+t;};
+  T.logPhotoBefore=(LANG==='ja')?'\u5199\u771f\u3092\u6dfb\u4ed8\uff08\u624b\u76f4\u3057\u524d\uff09':'Photo evidence attached (before)';
+  T.logPhotoAfter=(LANG==='ja')?function(p){return '\u5199\u771f\u3092\u6dfb\u4ed8\uff08'+p+'\u56de\u76ee\u306e\u624b\u76f4\u3057\u5f8c\uff09';}
+                              :function(p){return 'Photo evidence attached (after '+(p===1?'first':'second')+' pass)';};
+  T.logReport=(LANG==='ja')?function(c,l){return '\u4e0d\u826f\u3092\u5831\u544a \u2015 '+l+'\u3067'+c;}
+                          :function(c,l){return 'Defect reported \u2014 '+c+' at '+l;};
+  T.logRepair=(LANG==='ja')?function(p,a,c){return '\u624b\u76f4\u3057'+p+'\u56de\u76ee \u2015 '+a+'\uff08\u539f\u56e0\uff1a'+c+'\uff09';}
+                          :function(p,a,c){return 'Repair pass '+p+' \u2014 '+a+' (cause: '+c+')';};
+  T.logMeas=(LANG==='ja')?function(v,r){return '\u6e2c\u5b9a '+v+' mm \u2015 '+r;}
+                        :function(v,r){return 'Measurement '+v+' mm \u2014 '+r;};
+  T.logFinal=(LANG==='ja')?function(v){return '\u6700\u7d42\u5224\u5b9a \u2015 '+v+'\u3002\u8a18\u9332\u3092\u5b8c\u4e86\u3057\u307e\u3057\u305f\u3002';}
+                         :function(v){return 'Final judgement \u2014 '+v+'. Record closed.';};
+  T.doneSummary=(LANG==='ja')?function(track,failed,blocked){
+      return '\u8ffd\u8de1ID '+track+' \u306b\u3088\u308a\u3001\u3053\u306e\u90e8\u54c1\u306f\u30e9\u30a4\u30f3\u304b\u3089\u6700\u7d42\u5224\u5b9a\u307e\u3067'+(failed?'2\u56de\u306e\u624b\u76f4\u3057\u3092\u7d4c\u3066':'1\u56de\u306e\u624b\u76f4\u3057\u3092\u7d4c\u3066')+'\u8ffd\u8de1\u3055\u308c\u307e\u3057\u305f\u3002\u3059\u3079\u3066\u306e\u5de5\u7a0b\u30fb\u5f79\u5272\u30fb\u5199\u771f\u304c\u3053\u306e1\u4ef6\u306e\u8a18\u9332\u306b\u7d10\u4ed8\u3044\u3066\u3044\u307e\u3059\u3002'+(blocked?('\u307e\u305f\u3001\u9806\u5e8f\u3092\u98db\u3070\u3059\u64cd\u4f5c\u3092'+blocked+'\u4ef6\u30d6\u30ed\u30c3\u30af\u3057\u307e\u3057\u305f\u3002'):'\u9806\u5e8f\u306f\u6b63\u3057\u304f\u5b88\u3089\u308c\u307e\u3057\u305f\u3002\u3053\u308c\u3092\u4fdd\u8a3c\u3059\u308b\u306e\u304c\u5de5\u7a0b\u30c1\u30a7\u30c3\u30af\u306e\u5f79\u5272\u3067\u3059\u3002');}
+    :function(track,failed,blocked){
+      return 'Tracking ID '+track+' carried this part from the line to final judgement through '+(failed?'two repair passes':'a single repair pass')+'. Every stage, every role and every photo resolves to this one record \u2014 and '+(blocked?('the workflow blocked '+blocked+' attempt'+(blocked>1?'s':'')+' to work out of sequence.'):'the sequence was followed exactly, which is what the gating guarantees.');};
+  if(LANG==='ja'){
+    for(var uk in UI){ var un=document.querySelector('[data-t="'+uk+'"]'); if(un) un.innerHTML=UI[uk]; }
+    document.title='\u73fe\u5834\u4e0d\u826f\u30ef\u30fc\u30af\u30d5\u30ed\u30fc \u30b7\u30df\u30e5\u30ec\u30fc\u30bf\u30fc | Jaydeep Foujdar';
+  }
+  var el=function(id){return document.getElementById(id);};
+
+  var STAGES=T.stages;
+  var CATEGORY=T.category, LOCATION=T.location, CAUSE=T.cause, ACTION=T.action, VERDICT=T.verdict;
+
+  var S;
+  function reset(){
+    S={stage:0,done:[false,false,false,false,false],skipped:[false,false,false,false,false],
+       blocked:0,rec:{},log:[],closed:false,t:0,draft:{}};
+    el('doneCard').className='done-card';
+    render();
+  }
+
+  function stamp(){ S.t+=Math.floor(Math.random()*4)+2; var m=8*60+14+S.t;
+    return ('0'+Math.floor(m/60)).slice(-2)+':'+('0'+(m%60)).slice(-2); }
+
+  function logit(who,what){ S.log.push({t:stamp(),who:who,what:what}); }
+
+  function reachable(i){
+    if(i===0) return true;
+    if(i===3) return S.done[2]&&S.rec.check==='Fail';
+    if(i===4) return S.done[2]&&(S.rec.check==='Pass'||S.done[3]);
+    return S.done[i-1];
+  }
+
+  function render(){
+    // stage strip
+    el('stages').innerHTML=STAGES.map(function(s,i){
+      var cls='st';
+      if(S.done[i]) cls+=' done';
+      else if(i===S.stage) cls+=' now';
+      if(S.skipped[i]) cls+=' skipped';
+      if(!reachable(i)&&!S.done[i]) cls+=' locked';
+      var lock=(!reachable(i)&&!S.done[i])?'<span class="lock">🔒</span>':(S.done[i]?'<span class="lock">✓</span>':'');
+      return '<button class="'+cls+'" data-i="'+i+'"><small>'+s.n+'</small><b>'+s.t+'</b>'+lock+'</button>';
+    }).join('');
+    var btns=el('stages').querySelectorAll('.st');
+    for(var b=0;b<btns.length;b++){
+      btns[b].onclick=function(){
+        var i=+this.getAttribute('data-i');
+        if(S.closed) return;
+        if(S.done[i]){ flash(this,T.doneMsg); return; }
+        if(!reachable(i)){
+          S.blocked++;
+          flash(this,T.blocked(i));
+          return;
+        }
+        S.stage=i; render();
+      };
+    }
+    el('stTitle').textContent=STAGES[S.stage].n+' \u2014 '+STAGES[S.stage].t;
+    el('role').textContent=STAGES[S.stage].role;
+    body();
+    recPanel();
+    logPanel();
+  }
+
+  function flash(node,msg){
+    node.className+=' deny';
+    setTimeout(function(){ node.className=node.className.replace(' deny',''); },320);
+    var e=el('gateErr');
+    if(e){ e.innerHTML=msg; e.className='err on'; }
+  }
+
+  var FIELDS=['f_cat','f_loc','f_cause','f_act','f_verdict'];
+  // keep in-progress selections when the panel re-renders (e.g. after capturing a photo)
+  function stash(){
+    FIELDS.forEach(function(id){
+      var node=document.getElementById(id);
+      if(node) S.draft[id]=node.value;
+    });
+  }
+  function sel(id,label,opts){
+    var cur=S.draft[id]||'';
+    return '<div class="field"><label>'+label+'</label><select id="'+id+'">'+
+      '<option value=""'+(cur===''?' selected':'')+'>'+T.selectPh+'</option>'+
+      opts.map(function(o){return '<option'+(o===cur?' selected':'')+'>'+o+'</option>';}).join('')+
+      '</select></div>';
+  }
+
+  function body(){
+    stash();
+    var i=S.stage,h='';
+    if(S.closed){
+      el('stBody').innerHTML='<p style="margin:0;color:var(--muted);font-size:.88rem">'+T.closedNote+'</p>';
+      return;
+    }
+    if(i===0){
+      h+= S.rec.track
+        ? '<div class="scan"><div style="font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">'+T.scanned+'</div><div class="code">'+S.rec.part+'</div><div style="font-size:.76rem;color:var(--muted);margin-top:4px">'+T.trackIssued(S.rec.track)+'</div></div>'
+        : '<div class="scan"><div style="font-size:1.6rem">\u25a5</div><div style="font-size:.84rem;color:var(--muted);margin:6px 0 10px">'+T.scanPrompt+'</div><button class="btn" id="scan">'+T.scanBtn+'</button></div>';
+      if(S.rec.track){
+        h+='<div style="height:14px"></div>';
+        h+=sel('f_cat',T.lCat,CATEGORY);
+        h+=sel('f_loc',T.lLoc,LOCATION);
+        h+='<div class="field"><label>'+T.lPhotoBefore+'</label><div class="row"><div class="photo'+(S.rec.p1?' has':'')+'" id="ph1">'+(S.rec.p1?'\u2713':'\u25a2')+'</div><button class="btn ghost" id="cap1">'+(S.rec.p1?T.retake:T.capture)+'</button></div></div>';
+        h+='<button class="btn" id="submit">'+T.submitReport+'</button>';
+      }
+      h+='<div class="gate">'+T.gate1+'</div>';
+      h+='<div class="err" id="gateErr"></div>';
+      el('stBody').innerHTML=h;
+      if(el('scan')) el('scan').onclick=function(){
+        S.rec.part='PT-'+(4000+Math.floor(Math.random()*900))+'-'+'ABCD'[Math.floor(Math.random()*4)];
+        S.rec.track='TRK-'+(1000+Math.floor(Math.random()*8999));
+        logit(T.rReporter,T.logScan(S.rec.track));
+        render();
+      };
+      if(el('cap1')) el('cap1').onclick=function(){ S.rec.p1=true; logit(T.rReporter,T.logPhotoBefore); render(); };
+      if(el('submit')) el('submit').onclick=function(){
+        var c=el('f_cat').value,l=el('f_loc').value;
+        if(!c||!l||!S.rec.p1){
+          el('gateErr').innerHTML=T.err1;
+          el('gateErr').className='err on'; return;
+        }
+        S.rec.cat=c; S.rec.loc=l; S.done[0]=true; S.stage=1; S.draft={};
+        logit(T.rReporter,T.logReport(c,l));
+        render();
+      };
+      return;
+    }
+    if(i===1||i===3){
+      var pn=(i===1)?1:2;
+      h+=sel('f_cause',T.lCause,CAUSE);
+      h+=sel('f_act',T.lAction,ACTION);
+      h+='<div class="field"><label>'+T.lPhotoAfter+'</label><div class="row"><div class="photo'+(S.rec['p'+(i===1?2:3)]?' has':'')+'">'+(S.rec['p'+(i===1?2:3)]?'\u2713':'\u25a2')+'</div><button class="btn ghost" id="cap2">'+(S.rec['p'+(i===1?2:3)]?T.retake:T.capture)+'</button></div></div>';
+      h+='<button class="btn" id="submit">'+T.submitRepair(pn)+'</button>';
+      h+='<div class="gate">'+T.gate2+'</div>';
+      h+='<div class="err" id="gateErr"></div>';
+      el('stBody').innerHTML=h;
+      var pk='p'+(i===1?2:3);
+      el('cap2').onclick=function(){ S.rec[pk]=true; logit(T.rRepairer,T.logPhotoAfter(pn)); render(); };
+      el('submit').onclick=function(){
+        var c=el('f_cause').value,a=el('f_act').value;
+        if(!c||!a||!S.rec[pk]){
+          el('gateErr').innerHTML=T.err2;
+          el('gateErr').className='err on'; return;
+        }
+        if(i===1){ S.rec.cause=c; S.rec.action=a; S.done[1]=true; S.stage=2; logit(T.rRepairer,T.logRepair(1,a,c)); }
+        else { S.rec.cause2=c; S.rec.action2=a; S.done[3]=true; S.stage=4; logit(T.rRepairer,T.logRepair(2,a,c)); }
+        S.draft={};
+        render();
+      };
+      return;
+    }
+    if(i===2){
+      h+='<p style="margin:0 0 14px;font-size:.87rem;color:var(--muted)">'+T.measIntro+'</p>';
+      if(S.rec.check){
+        h+='<div class="scan" style="border-color:'+(S.rec.check==='Pass'?'var(--ok)':'var(--warn)')+'"><div class="code" style="color:'+(S.rec.check==='Pass'?'var(--ok)':'var(--warn)')+'">'+(S.rec.check==='Pass'?T.passUp:T.failUp)+'</div><div style="font-size:.78rem;color:var(--muted);margin-top:4px">'+T.measured(S.rec.val)+'</div></div>';
+        h+='<div style="height:14px"></div><button class="btn" id="next">'+(S.rec.check==='Pass'?T.contPass:T.contFail)+'</button>';
+      } else {
+        h+='<button class="btn" id="run">'+T.runMeas+'</button>';
+      }
+      h+='<div class="err" id="gateErr"></div>';
+      el('stBody').innerHTML=h;
+      if(el('run')) el('run').onclick=function(){
+        var v=(Math.random()*1.4-0.7);
+        S.rec.val=v.toFixed(2);
+        S.rec.check=Math.abs(v)<=0.5?'Pass':'Fail';
+        logit(T.rInspector,T.logMeas(S.rec.val,S.rec.check==='Pass'?T.pass:T.fail));
+        render();
+      };
+      if(el('next')) el('next').onclick=function(){
+        S.done[2]=true;
+        if(S.rec.check==='Pass'){ S.skipped[3]=true; S.stage=4; }
+        else { S.stage=3; }
+        render();
+      };
+      return;
+    }
+    // stage 5
+    h+=sel('f_verdict',T.lVerdict,VERDICT);
+    h+='<button class="btn" id="close">'+T.closeBtn+'</button>';
+    h+='<div class="gate">'+T.gate5+'</div>';
+    h+='<div class="err" id="gateErr"></div>';
+    el('stBody').innerHTML=h;
+    el('close').onclick=function(){
+      var v=el('f_verdict').value;
+      if(!v){ el('gateErr').innerHTML=T.err5; el('gateErr').className='err on'; return; }
+      S.rec.verdict=v; S.done[4]=true; S.closed=true;
+      logit(T.rInspector,T.logFinal(v));
+      el('m1').textContent=S.done.filter(Boolean).length;
+      el('m2').textContent=S.blocked;
+      el('doneMsg').textContent=T.doneSummary(S.rec.track,S.rec.check==='Fail',S.blocked);
+      el('doneCard').className='done-card on';
+      render();
+      el('doneCard').scrollIntoView({behavior:'smooth',block:'center'});
+    };
+  }
+
+  function recPanel(){
+    var r=S.rec;
+    function line(k,v,mono){ return '<div class="line"><span class="k">'+k+'</span><span class="v'+(mono?' mono':'')+'">'+(v||'<span class="pending">'+T.pending+'</span>')+'</span></div>'; }
+    el('recState').textContent=S.closed?T.recClosed:(r.track?T.recOpen:T.recNone);
+    var np=[r.p1,r.p2,r.p3].filter(Boolean).length;
+    el('rec').innerHTML=
+      line(T.fTrack,r.track,true)+
+      line(T.fPart,r.part,true)+
+      line(T.fCat,r.cat)+
+      line(T.fLoc,r.loc)+
+      line(T.fCause1,r.cause)+
+      line(T.fAct1,r.action)+
+      line(T.fMeas,r.check?(r.val+' mm \u00b7 '+(r.check==='Pass'?T.pass:T.fail)):'')+
+      (r.check==='Fail'?line(T.fAct2,r.action2):'')+
+      line(T.fVerdict,r.verdict)+
+      line(T.fPhotos,np?T.photoN(np):'');
+  }
+
+  function logPanel(){
+    if(!S.log.length){ el('log').innerHTML='<span class="pending">'+T.logEmpty+'</span>'; return; }
+    el('log').innerHTML=S.log.map(function(e){
+      return '<div class="e"><span class="t">'+e.t+'</span><span class="who">'+e.who+'</span><span class="what">'+e.what+'</span></div>';
+    }).join('');
+    el('log').scrollTop=el('log').scrollHeight;
+  }
+
+  el('again').onclick=function(){ reset(); window.scrollTo({top:0,behavior:'smooth'}); };
+
+  if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){
+    document.documentElement.setAttribute('data-theme','dark');
+  }
+  reset();
+})();
+</script>
+</body>
+</html>

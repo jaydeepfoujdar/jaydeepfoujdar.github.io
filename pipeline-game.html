@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pipeline Builder — Hardcoded vs Metadata-Driven | Jaydeep Foujdar</title>
+<meta name="description" content="An interactive demo by Jaydeep Foujdar: onboard data sources the hardcoded way, then the metadata-driven way, and see the difference in effort for yourself.">
+<style>
+:root{
+  --bg:#ffffff;--bg-alt:#f5f8fa;--bg-deep:#0d1b2a;--card:#ffffff;
+  --text:#16232e;--muted:#5b6b7a;--line:#e2e9ef;
+  --accent:#0b7285;--accent-soft:#e3f2f5;--accent-2:#c2410c;--ok:#0f766e;--warn:#b45309;
+  --shadow:0 1px 2px rgba(13,27,42,.06),0 8px 24px rgba(13,27,42,.06);--radius:14px;
+}
+html[data-theme="dark"]{
+  --bg:#0d1b2a;--bg-alt:#122334;--bg-deep:#08131e;--card:#152a3d;
+  --text:#e8eef4;--muted:#9db0c2;--line:#22384d;
+  --accent:#4dd4e8;--accent-soft:#12303c;--accent-2:#fb923c;--ok:#5eead4;--warn:#fbbf24;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1000px;margin:0 auto;padding:0 24px}
+.top{background:var(--bg-deep);color:#eaf2f7;padding:44px 0 40px}
+.eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#4dd4e8;margin-bottom:10px}
+.top h1{margin:0;font-size:clamp(1.6rem,3.6vw,2.2rem);letter-spacing:-.02em;color:#fff}
+.top p{color:#b6c6d4;max-width:72ch;margin:14px 0 0}
+main{padding:34px 0 60px}
+
+.hud{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:13px;text-align:center;box-shadow:var(--shadow)}
+.kpi b{display:block;font-size:1.3rem;color:var(--accent);letter-spacing:-.02em;line-height:1.25}
+.kpi span{font-size:.73rem;color:var(--muted)}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:20px}
+.phead{padding:15px 20px;border-bottom:1px solid var(--line);background:var(--bg-alt);border-radius:13px 13px 0 0;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.phead h2{margin:0;font-size:1.02rem}
+.mode{
+  font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 10px;border-radius:5px;background:var(--accent-2);color:#fff;
+}
+.mode.meta{background:var(--accent)}
+.phead .right{margin-left:auto;color:var(--muted);font-size:.82rem}
+.pbody{padding:20px}
+
+.queue{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.src{
+  border:1px solid var(--line);border-radius:10px;padding:9px 13px;font-size:.83rem;
+  background:var(--bg-alt);display:flex;gap:8px;align-items:center;
+}
+.src.done{border-color:var(--ok);background:var(--accent-soft)}
+.src.active{border-color:var(--accent-2);box-shadow:0 0 0 3px var(--accent-soft)}
+.src .tick{color:var(--ok);font-weight:700}
+
+.task{border:1px dashed var(--line);border-radius:12px;padding:18px;background:var(--bg-alt)}
+.task h3{margin:0 0 4px;font-size:.95rem}
+.task .hint{color:var(--muted);font-size:.83rem;margin-bottom:14px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+select,.btn{
+  font:inherit;font-size:.88rem;border-radius:9px;padding:10px 14px;border:1px solid var(--line);
+  background:var(--bg);color:var(--text);
+}
+select:focus,.btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.btn{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:650;cursor:pointer}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:var(--card);color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.cols{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.col{
+  border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 13px;
+  font-size:.8rem;cursor:pointer;font-family:inherit;color:var(--text);
+}
+.col:hover{border-color:var(--accent)}
+.col.mapped{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:650}
+.steplist{margin:0 0 14px;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.steplist li{
+  font-size:.74rem;padding:4px 9px;border-radius:6px;border:1px solid var(--line);color:var(--muted);
+}
+.steplist li.done{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.steplist li.now{border-color:var(--accent-2);color:var(--accent-2);font-weight:700}
+
+.canvas{margin-top:18px;border:1px solid var(--line);border-radius:12px;background:var(--bg-alt);padding:16px}
+.canvas h4{margin:0 0 12px;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.pipes{display:flex;flex-wrap:wrap;gap:10px}
+.pipe{
+  border:1px solid var(--line);border-top:3px solid var(--accent-2);border-radius:9px;
+  background:var(--card);padding:9px 12px;font-size:.76rem;min-width:150px;
+}
+.pipe.shared{border-top-color:var(--accent)}
+.pipe b{display:block;font-size:.8rem;margin-bottom:2px}
+.pipe span{color:var(--muted)}
+.mtable{width:100%;border-collapse:collapse;margin-top:10px;font-size:.78rem}
+.mtable th,.mtable td{border:1px solid var(--line);padding:6px 9px;text-align:left}
+.mtable th{background:var(--card);color:var(--muted);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase}
+.empty{color:var(--muted);font-size:.82rem;font-style:italic}
+
+.result{display:none}
+.result.on{display:block}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch;margin-top:6px}
+.vsbox{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--bg-alt)}
+.vsbox.good{border-color:var(--accent);background:var(--accent-soft)}
+.vsbox h4{margin:0 0 8px;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.vsbox.good h4{color:var(--accent)}
+.vsbox .big{font-size:1.7rem;font-weight:700;letter-spacing:-.02em;line-height:1.2}
+.vsbox p{margin:6px 0 0;font-size:.82rem;color:var(--muted)}
+.vsmid{display:grid;place-items:center;color:var(--accent);font-weight:700}
+.takeaway{
+  margin-top:16px;padding:15px 17px;border-radius:10px;border-left:4px solid var(--accent);
+  background:var(--accent-soft);font-size:.88rem;color:var(--muted);
+}
+.takeaway b{color:var(--text)}
+.note{margin-top:20px;background:var(--bg-alt);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.note h3{margin:0 0 9px;font-size:1rem}
+.note p,.note li{color:var(--muted);font-size:.87rem}
+.note ul{margin:8px 0 0;padding-left:20px}
+.note li{margin-bottom:5px}
+.note strong{color:var(--text)}
+@media(max-width:760px){
+  .hud{grid-template-columns:repeat(2,1fr)}
+  .vs{grid-template-columns:1fr}
+  .vsmid{transform:rotate(90deg);padding:4px 0}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="eyebrow" data-t="eyebrow">Interactive demo · prototype</div>
+    <h1 data-t="h1">Pipeline Builder: hardcoded vs metadata-driven</h1>
+    <p data-t="intro">
+      Onboard three data sources into a data lake — first the way most teams do it, then the way I
+      build it. Same result both times. Count the clicks, and the architectural difference stops
+      being a slide and becomes something you felt.
+    </p>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <div class="hud">
+      <div class="kpi"><b id="k1">0</b><span data-t="kpi1">Actions this round</span></div>
+      <div class="kpi"><b id="k2">0 / 3</b><span data-t="kpi2">Sources onboarded</span></div>
+      <div class="kpi"><b id="k3">0</b><span data-t="kpi3">Pipelines to maintain</span></div>
+      <div class="kpi"><b id="k4">—</b><span data-t="kpi4">Cost of next source</span></div>
+    </div>
+
+    <div class="panel">
+      <div class="phead">
+        <span class="mode" id="modeTag">Round 1 · Hardcoded</span>
+        <h2 id="roundTitle">Build one pipeline per source</h2>
+        <span class="right" id="roundHint">Every source needs the whole thing again</span>
+      </div>
+      <div class="pbody">
+
+        <div class="queue" id="queue"></div>
+
+        <ul class="steplist" id="steplist"></ul>
+
+        <div class="task">
+          <h3 id="taskTitle">Loading…</h3>
+          <div class="hint" id="taskHint"></div>
+          <div class="controls" id="controls"></div>
+        </div>
+
+        <div class="canvas">
+          <h4 id="canvasTitle">What you have built so far</h4>
+          <div class="pipes" id="pipes"><span class="empty">Nothing yet.</span></div>
+          <div id="metaWrap"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="panel result" id="result">
+      <div class="phead">
+        <span class="mode meta" data-t="resTag">Result</span>
+        <h2 data-t="resH">Same three sources. Same outcome. Different architecture.</h2>
+      </div>
+      <div class="pbody">
+        <div class="vs">
+          <div class="vsbox">
+            <h4 data-t="vsA">Hardcoded</h4>
+            <div class="big" id="rA">0 actions</div>
+            <p id="rAp"></p>
+          </div>
+          <div class="vsmid">vs</div>
+          <div class="vsbox good">
+            <h4 data-t="vsB">Metadata-driven</h4>
+            <div class="big" id="rB">0 actions</div>
+            <p id="rBp"></p>
+          </div>
+        </div>
+        <div class="takeaway" id="takeaway"></div>
+        <div class="controls" style="margin-top:16px">
+          <button class="btn" id="addFourth" data-t="btn4">Now add a 4th source to both</button>
+          <button class="btn ghost" id="restart" data-t="btnR">Play again</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <h3 data-t="noteH">Why this is the design decision that mattered</h3>
+      <p data-t="noteP">
+        Both approaches deliver identical data to the lake. The difference only shows up on the
+        <strong>fourth source, and the fortieth</strong> — which is exactly when a platform either
+        scales or starts to collapse under its own maintenance.
+      </p>
+      <ul data-t="noteList">
+        <li><strong>Hardcoded:</strong> effort is linear. Every source is a new build, every fix has to be repeated across every pipeline, and the object count grows without limit.</li>
+        <li><strong>Metadata-driven:</strong> effort is front-loaded once. After that a new source is a configuration entry, logic lives in one place, and the pipeline estate stops multiplying — which is also what kept the platform inside its existing licence tier.</li>
+      </ul>
+      <p style="margin-top:11px" data-t="noteP2">
+        In production this framework moves SAP and internal system data through CDS views into
+        ADLS Gen2 for Power BI, handling up to a million rows per run — and it cut onboarding time
+        for a new source by up to 60%.
+      </p>
+    </div>
+
+  </div>
+</main>
+
+<script>
+(function(){
+  var LANG=(location.search.match(/[?&]lang=([a-z]{2})/i)||[])[1]==='ja'?'ja':'en';
+  document.documentElement.setAttribute('lang',LANG);
+  var UI={
+    eyebrow:'体験デモ · プロトタイプ',
+    h1:'パイプライン構築ゲーム：個別実装 vs メタデータ駆動',
+    intro:'3つのデータソースをデータレイクへ取り込みます。まず多くの現場で行われている方法で、次に私が実際に構築している方法で。結果は同じです。操作回数を数えてみてください。設計の違いが、資料ではなく実感として残ります。',
+    kpi1:'このラウンドの操作回数', kpi2:'取り込んだソース', kpi3:'保守対象のパイプライン', kpi4:'次の1件にかかる操作',
+    vsA:'個別実装', vsB:'メタデータ駆動',
+    resH:'同じ3ソース、同じ結果。異なるアーキテクチャ。', resTag:'結果',
+    btn4:'4つ目のソースを両方に追加', btnR:'もう一度',
+    noteH:'これが、最も効いた設計判断です',
+    noteP:'どちらの方法でも、レイクに届くデータは同じです。差が表れるのは<strong>4件目、そして40件目</strong>のとき ― まさに基盤が拡張していけるか、保守に押しつぶされるかの分かれ目です。',
+    noteList:'<li><strong>個別実装：</strong>工数はソース数に比例します。1件ごとに新規開発が発生し、修正はすべてのパイプラインに繰り返し適用が必要で、管理対象は際限なく増えていきます。</li><li><strong>メタデータ駆動：</strong>工数は最初に一度だけかかります。以降、新しいソースは設定を1件追加するだけ。ロジックは1か所に集約され、パイプラインが増え続けることもありません。結果として、既存のライセンス範囲内に収まりました。</li>',
+    noteP2:'実運用では、この基盤がSAPおよび社内システムのデータをCDSビュー経由でADLS Gen2へ取り込み、Power BIへ提供しています。1回の実行で最大100万件規模に対応し、新規ソースの追加期間を最大60％短縮しました。'
+  };
+  var T={
+    en:{
+      r1tag:'Round 1 \u00b7 Hardcoded', r2tag:'Round 2 \u00b7 Metadata-driven',
+      r1title:'Build one pipeline per source', r2title:'Build the framework once, then configure',
+      r1hint:'Every source needs the whole thing again', r2hint:'Pay once up front, then each source is a row',
+      canvas:'What you have built so far', nothing:'Nothing yet.',
+      hardSteps:['New pipeline','Source system','CDS view','Map columns','Destination','Schedule','Deploy'],
+      metaSetup:['Design parameterised pipeline','Define metadata schema','Add lookup activity','Add ForEach loop','Parameterise copy activity','Deploy once'],
+      metaSteps:['Source','CDS view','Zone','Add metadata row'],
+      selSystem:'Select system\u2026', selView:'Select CDS view\u2026', selZone:'Select zone\u2026', selSched:'Select schedule\u2026',
+      confirm:'Confirm', sched:['Hourly','Daily 02:00','Weekly'],
+      t1:function(nm){return 'Create a new pipeline for \u201c'+nm+'\u201d';}, t1h:'Nothing is reusable yet, so this source starts from an empty canvas.',
+      newPipe:'+ New pipeline',
+      t2:'Configure the source connection', t2h:'Pick the system this pipeline will read from.',
+      t3:'Select the CDS view', t3h:function(nm){return 'Choose the view that exposes '+nm+'.';},
+      t4:'Map the columns', t4h:'Click each column to map it. This is per-pipeline work \u2014 no other pipeline can reuse it.',
+      t5:'Set the destination path', t5h:'Type the lake zone and folder for this pipeline by hand.',
+      t6:'Set the schedule', t6h:'Configure the trigger for this pipeline.',
+      t7:'Deploy the pipeline', t7h:'Ship it. Then start again from zero for the next source.', deploy:'Deploy pipeline',
+      hardcodedTag:'hardcoded \u00b7 ',
+      setupT:function(st){return 'One-time framework build \u2014 '+st;}, setupH:'You pay this cost once, and only once, for every source that will ever exist.',
+      genericPipe:'pl_generic_ingest', genericSub:'parameterised \u00b7 serves every source',
+      m1:function(nm){return 'Add \u201c'+nm+'\u201d \u2014 source system';}, m1h:'No new pipeline. You are adding a row of configuration.',
+      m2:function(nm){return 'Add \u201c'+nm+'\u201d \u2014 CDS view';}, m2h:'The framework reads this at runtime.',
+      m3:function(nm){return 'Add \u201c'+nm+'\u201d \u2014 target zone';}, m3h:'Column mapping, path and schedule are all derived from metadata. No manual mapping.',
+      m4:'Save the metadata row', m4h:'That is the whole onboarding. The existing pipeline picks it up on the next run.', addRow:'Add metadata row',
+      r2begin:'Round 2 begins', r2beginH:'Same three sources \u2014 now the way I build it.',
+      doneT:'Both rounds complete', doneH:'Scroll down for the comparison.',
+      acts:function(a){return a+' actions';}, next:function(a){return a+' actions';},
+      thS:'Source', thV:'CDS view', thZ:'Target zone',
+      rAp:'3 separate pipelines to maintain. Every future fix must be repeated in each one.',
+      rBp:'1 shared pipeline + 3 config rows. A fix lands in one place and applies everywhere.',
+      take:function(mA,mB,cut){return 'The framework costs more up front \u2014 six actions before a single source is onboarded. It has already paid that back by the third source. The number that matters is <b>marginal cost</b>: the next source costs <b>'+mA+' actions</b> hardcoded versus <b>'+mB+'</b> with the framework \u2014 <b>'+cut+'% less</b>, and it stays flat however many sources follow.';},
+      rAp4:'4 pipelines now. Source 4 cost another full build \u2014 10 more actions.',
+      rBp4:'Still 1 pipeline. Source 4 cost 4 actions, and source 40 would cost the same 4.',
+      take4:'This is the whole point. Hardcoded effort grows with every source; metadata-driven effort stays <b>flat</b>. At 4 sources the gap is small. At 40, one approach is a maintenance backlog and the other is a table with 40 rows.',
+      of:function(d){return d+' / 3';}, dash:'\u2014'
+    },
+    ja:{
+      r1tag:'\u30e9\u30a6\u30f3\u30c91 \u00b7 \u500b\u5225\u5b9f\u88c5', r2tag:'\u30e9\u30a6\u30f3\u30c92 \u00b7 \u30e1\u30bf\u30c7\u30fc\u30bf\u99c6\u52d5',
+      r1title:'\u30bd\u30fc\u30b9\u3054\u3068\u306b\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3\u3092\u4f5c\u308b', r2title:'\u57fa\u76e4\u3092\u4e00\u5ea6\u4f5c\u308a\u3001\u3042\u3068\u306f\u8a2d\u5b9a\u3059\u308b\u3060\u3051',
+      r1hint:'\u30bd\u30fc\u30b9\u304c\u5897\u3048\u308b\u305f\u3073\u3001\u6700\u521d\u304b\u3089\u3059\u3079\u3066\u4f5c\u308a\u76f4\u3057', r2hint:'\u6700\u521d\u306b\u4e00\u5ea6\u3060\u3051\u4f5c\u308c\u3070\u3001\u4ee5\u964d\u306f1\u884c\u306e\u8a2d\u5b9a',
+      canvas:'\u3053\u3053\u307e\u3067\u306b\u69cb\u7bc9\u3057\u305f\u3082\u306e', nothing:'\u307e\u3060\u4f55\u3082\u3042\u308a\u307e\u305b\u3093\u3002',
+      hardSteps:['\u65b0\u898f\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3','\u63a5\u7d9a\u5143\u30b7\u30b9\u30c6\u30e0','CDS\u30d3\u30e5\u30fc','\u9805\u76ee\u30de\u30c3\u30d4\u30f3\u30b0','\u683c\u7d0d\u5148','\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb','\u30c7\u30d7\u30ed\u30a4'],
+      metaSetup:['\u6c4e\u7528\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3\u306e\u8a2d\u8a08','\u30e1\u30bf\u30c7\u30fc\u30bf\u5b9a\u7fa9\u306e\u4f5c\u6210','Lookup\u30a2\u30af\u30c6\u30a3\u30d3\u30c6\u30a3\u306e\u8ffd\u52a0','ForEach\u30eb\u30fc\u30d7\u306e\u8ffd\u52a0','Copy\u30a2\u30af\u30c6\u30a3\u30d3\u30c6\u30a3\u306e\u30d1\u30e9\u30e1\u30fc\u30bf\u5316','\u4e00\u5ea6\u3060\u3051\u30c7\u30d7\u30ed\u30a4'],
+      metaSteps:['\u63a5\u7d9a\u5143','CDS\u30d3\u30e5\u30fc','\u683c\u7d0d\u30be\u30fc\u30f3','\u30e1\u30bf\u30c7\u30fc\u30bf\u884c\u306e\u8ffd\u52a0'],
+      selSystem:'\u30b7\u30b9\u30c6\u30e0\u3092\u9078\u629e\u2026', selView:'CDS\u30d3\u30e5\u30fc\u3092\u9078\u629e\u2026', selZone:'\u30be\u30fc\u30f3\u3092\u9078\u629e\u2026', selSched:'\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb\u3092\u9078\u629e\u2026',
+      confirm:'\u78ba\u5b9a', sched:['\u6bce\u6642','\u6bce\u65e5 02:00','\u6bce\u9031'],
+      t1:function(nm){return '\u300c'+nm+'\u300d\u7528\u306e\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3\u3092\u65b0\u898f\u4f5c\u6210';}, t1h:'\u518d\u5229\u7528\u3067\u304d\u308b\u3082\u306e\u304c\u307e\u3060\u306a\u3044\u305f\u3081\u3001\u3053\u306e\u30bd\u30fc\u30b9\u3082\u767d\u7d19\u304b\u3089\u4f5c\u308a\u59cb\u3081\u307e\u3059\u3002',
+      newPipe:'\uff0b \u65b0\u898f\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3',
+      t2:'\u63a5\u7d9a\u5143\u306e\u8a2d\u5b9a', t2h:'\u3053\u306e\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3\u304c\u8aad\u307f\u53d6\u308b\u30b7\u30b9\u30c6\u30e0\u3092\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\u3002',
+      t3:'CDS\u30d3\u30e5\u30fc\u306e\u9078\u629e', t3h:function(nm){return '\u300c'+nm+'\u300d\u3092\u516c\u958b\u3057\u3066\u3044\u308b\u30d3\u30e5\u30fc\u3092\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\u3002';},
+      t4:'\u9805\u76ee\u306e\u30de\u30c3\u30d4\u30f3\u30b0', t4h:'\u5404\u9805\u76ee\u3092\u30af\u30ea\u30c3\u30af\u3057\u3066\u30de\u30c3\u30d4\u30f3\u30b0\u3057\u307e\u3059\u3002\u3053\u308c\u306f\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3\u3054\u3068\u306e\u4f5c\u696d\u3067\u3001\u4ed6\u306e\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3\u3067\u306f\u518d\u5229\u7528\u3067\u304d\u307e\u305b\u3093\u3002',
+      t5:'\u683c\u7d0d\u5148\u30d1\u30b9\u306e\u8a2d\u5b9a', t5h:'\u3053\u306e\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3\u7528\u306b\u3001\u30ec\u30a4\u30af\u306e\u30be\u30fc\u30f3\u3068\u30d5\u30a9\u30eb\u30c0\u30fc\u3092\u624b\u4f5c\u696d\u3067\u6307\u5b9a\u3057\u307e\u3059\u3002',
+      t6:'\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb\u306e\u8a2d\u5b9a', t6h:'\u3053\u306e\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3\u306e\u5b9f\u884c\u30c8\u30ea\u30ac\u30fc\u3092\u8a2d\u5b9a\u3057\u307e\u3059\u3002',
+      t7:'\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3\u306e\u30c7\u30d7\u30ed\u30a4', t7h:'\u30ea\u30ea\u30fc\u30b9\u3057\u307e\u3059\u3002\u305d\u3057\u3066\u6b21\u306e\u30bd\u30fc\u30b9\u306f\u3001\u307e\u305f\u30bc\u30ed\u304b\u3089\u4f5c\u308a\u76f4\u3057\u3067\u3059\u3002', deploy:'\u30c7\u30d7\u30ed\u30a4\u3059\u308b',
+      hardcodedTag:'\u500b\u5225\u5b9f\u88c5 \u00b7 ',
+      setupT:function(st){return '\u4e00\u5ea6\u3060\u3051\u306e\u57fa\u76e4\u69cb\u7bc9 \u2015 '+st;}, setupH:'\u3053\u306e\u5de5\u6570\u304c\u304b\u304b\u308b\u306e\u306f\u6700\u521d\u306e\u4e00\u5ea6\u3060\u3051\u3067\u3059\u3002\u4ee5\u964d\u3001\u8ffd\u52a0\u3055\u308c\u308b\u3059\u3079\u3066\u306e\u30bd\u30fc\u30b9\u306b\u5bfe\u3057\u3066\u4e8c\u5ea6\u3068\u767a\u751f\u3057\u307e\u305b\u3093\u3002',
+      genericPipe:'pl_generic_ingest', genericSub:'\u30d1\u30e9\u30e1\u30fc\u30bf\u5316 \u00b7 \u3059\u3079\u3066\u306e\u30bd\u30fc\u30b9\u306b\u5bfe\u5fdc',
+      m1:function(nm){return '\u300c'+nm+'\u300d\u3092\u8ffd\u52a0 \u2015 \u63a5\u7d9a\u5143\u30b7\u30b9\u30c6\u30e0';}, m1h:'\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3\u306f\u4f5c\u308a\u307e\u305b\u3093\u3002\u8a2d\u5b9a\u30921\u884c\u8ffd\u52a0\u3059\u308b\u3060\u3051\u3067\u3059\u3002',
+      m2:function(nm){return '\u300c'+nm+'\u300d\u3092\u8ffd\u52a0 \u2015 CDS\u30d3\u30e5\u30fc';}, m2h:'\u57fa\u76e4\u304c\u5b9f\u884c\u6642\u306b\u3053\u306e\u5024\u3092\u8aad\u307f\u53d6\u308a\u307e\u3059\u3002',
+      m3:function(nm){return '\u300c'+nm+'\u300d\u3092\u8ffd\u52a0 \u2015 \u683c\u7d0d\u30be\u30fc\u30f3';}, m3h:'\u9805\u76ee\u30de\u30c3\u30d4\u30f3\u30b0\u3001\u30d1\u30b9\u3001\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb\u306f\u3059\u3079\u3066\u30e1\u30bf\u30c7\u30fc\u30bf\u304b\u3089\u5c0e\u51fa\u3055\u308c\u307e\u3059\u3002\u624b\u4f5c\u696d\u3067\u306e\u30de\u30c3\u30d4\u30f3\u30b0\u306f\u4e0d\u8981\u3067\u3059\u3002',
+      m4:'\u30e1\u30bf\u30c7\u30fc\u30bf\u884c\u306e\u4fdd\u5b58', m4h:'\u3053\u308c\u3067\u53d6\u308a\u8fbc\u307f\u4f5c\u696d\u306f\u5b8c\u4e86\u3067\u3059\u3002\u65e2\u5b58\u306e\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3\u304c\u6b21\u56de\u5b9f\u884c\u6642\u306b\u8aad\u307f\u53d6\u308a\u307e\u3059\u3002', addRow:'\u30e1\u30bf\u30c7\u30fc\u30bf\u884c\u3092\u8ffd\u52a0',
+      r2begin:'\u30e9\u30a6\u30f3\u30c92 \u958b\u59cb', r2beginH:'\u540c\u30583\u3064\u306e\u30bd\u30fc\u30b9\u3092\u3001\u4eca\u5ea6\u306f\u79c1\u304c\u69cb\u7bc9\u3057\u3066\u3044\u308b\u65b9\u6cd5\u3067\u3002',
+      doneT:'\u4e21\u30e9\u30a6\u30f3\u30c9\u5b8c\u4e86', doneH:'\u4e0b\u306b\u6bd4\u8f03\u7d50\u679c\u3092\u8868\u793a\u3057\u3066\u3044\u307e\u3059\u3002',
+      acts:function(a){return a+'\u56de\u306e\u64cd\u4f5c';}, next:function(a){return a+'\u56de\u306e\u64cd\u4f5c';},
+      thS:'\u63a5\u7d9a\u5143', thV:'CDS\u30d3\u30e5\u30fc', thZ:'\u683c\u7d0d\u30be\u30fc\u30f3',
+      rAp:'\u4fdd\u5b88\u5bfe\u8c61\u306e\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3\u304c3\u672c\u3002\u4eca\u5f8c\u306e\u4fee\u6b63\u306f\u3001\u305d\u306e\u3059\u3079\u3066\u306b\u7e70\u308a\u8fd4\u3057\u9069\u7528\u3059\u308b\u5fc5\u8981\u304c\u3042\u308a\u307e\u3059\u3002',
+      rBp:'\u5171\u901a\u30d1\u30a4\u30d7\u30e9\u30a4\u30f31\u672c\uff0b\u8a2d\u5b9a3\u884c\u3002\u4fee\u6b63\u306f1\u304b\u6240\u306b\u52a0\u3048\u308b\u3060\u3051\u3067\u3001\u5168\u4f53\u306b\u53cd\u6620\u3055\u308c\u307e\u3059\u3002',
+      take:function(mA,mB,cut){return '\u57fa\u76e4\u5074\u306f\u6700\u521d\u306e\u5de5\u6570\u304c\u5927\u304d\u304f\u30011\u4ef6\u76ee\u3092\u53d6\u308a\u8fbc\u3080\u524d\u306b6\u56de\u306e\u64cd\u4f5c\u304c\u5fc5\u8981\u3067\u3059\u3002\u305d\u308c\u3067\u30823\u4ef6\u76ee\u307e\u3067\u306b\u56de\u53ce\u3067\u304d\u3066\u3044\u307e\u3059\u3002\u91cd\u8981\u306a\u306e\u306f<b>1\u4ef6\u3042\u305f\u308a\u306e\u8ffd\u52a0\u5de5\u6570</b>\u3067\u3059\u3002\u6b21\u306e1\u4ef6\u306b\u304b\u304b\u308b\u64cd\u4f5c\u306f\u3001\u500b\u5225\u5b9f\u88c5\u304c<b>'+mA+'\u56de</b>\u3001\u57fa\u76e4\u5229\u7528\u304c<b>'+mB+'\u56de</b> \u2015 <b>'+cut+'\uff05\u5c11\u306a\u304f</b>\u3001\u3057\u304b\u3082\u3053\u306e\u5148\u4f55\u4ef6\u5897\u3048\u3066\u3082\u5909\u308f\u308a\u307e\u305b\u3093\u3002';},
+      rAp4:'\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3\u306f4\u672c\u306b\u306a\u308a\u307e\u3057\u305f\u30024\u4ef6\u76ee\u3082\u307e\u305f\u4e00\u304b\u3089\u69cb\u7bc9\u3067\u300110\u56de\u306e\u64cd\u4f5c\u304c\u5fc5\u8981\u3067\u3057\u305f\u3002',
+      rBp4:'\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3\u306f1\u672c\u306e\u307e\u307e\u30024\u4ef6\u76ee\u306f4\u56de\u306e\u64cd\u4f5c\u3067\u5b8c\u4e86\u3057\u300140\u4ef6\u76ee\u3067\u3082\u540c\u30584\u56de\u3067\u3059\u3002',
+      take4:'\u3053\u308c\u304c\u3053\u306e\u6bd4\u8f03\u306e\u8981\u70b9\u3067\u3059\u3002\u500b\u5225\u5b9f\u88c5\u306e\u5de5\u6570\u306f\u30bd\u30fc\u30b9\u304c\u5897\u3048\u308b\u307b\u3069\u7a4d\u307f\u4e0a\u304c\u308a\u3001\u30e1\u30bf\u30c7\u30fc\u30bf\u99c6\u52d5\u306e\u5de5\u6570\u306f<b>\u4e00\u5b9a</b>\u306e\u307e\u307e\u3067\u3059\u30024\u4ef6\u3067\u306f\u5dee\u306f\u308f\u305a\u304b\u3067\u3059\u304c\u300140\u4ef6\u306b\u306a\u308b\u3068\u3001\u4e00\u65b9\u306f\u4fdd\u5b88\u6848\u4ef6\u306e\u5c71\u3001\u3082\u3046\u4e00\u65b9\u306f40\u884c\u306e\u8a2d\u5b9a\u8868\u306b\u306a\u308a\u307e\u3059\u3002',
+      of:function(d){return d+' / 3';}, dash:'\u2015'
+    }
+  }[LANG];
+  var el=function(id){return document.getElementById(id);};
+
+  var SOURCES=[
+    {name:'Sales Orders',   view:'I_SalesOrderItem',  zone:'curated', cols:['OrderID','Customer','Amount','OrderDate']},
+    {name:'Customer Master',view:'I_Customer',        zone:'refined', cols:['CustomerID','Name','Region','Segment']},
+    {name:'Inventory Snap', view:'I_MaterialStock',   zone:'raw',     cols:['MaterialID','Plant','Qty','SnapDate']}
+  ];
+  var VIEWS=['I_SalesOrderItem','I_Customer','I_MaterialStock','I_BillingDoc'];
+  var ZONES=['raw','refined','curated'];
+
+  var HARD_STEPS=T.hardSteps, META_SETUP=T.metaSetup, META_STEPS=T.metaSteps;
+
+  var S={round:1,actions:0,done:0,src:0,step:0,mapped:0,pipes:[],meta:[],setupDone:false,totalA:0,totalB:0};
+
+  function bump(n){ S.actions+=(n||1); paint(); }
+
+  function paint(){
+    el('k1').textContent=S.actions;
+    el('k2').textContent=T.of(S.done);
+    el('k3').textContent=(S.round===1?S.pipes.length:(S.setupDone?1:0));
+    el('k4').textContent=S.round===1?(S.done?T.next(10):T.dash):(S.setupDone?T.next(4):T.dash);
+
+    var q=SOURCES.map(function(s,i){
+      var cls=i<S.done?'src done':(i===S.src&&S.done<3?'src active':'src');
+      return '<span class="'+cls+'">'+(i<S.done?'<span class="tick">✓</span>':'')+s.name+'</span>';
+    }).join('');
+    el('queue').innerHTML=q;
+
+    var steps=S.round===1?HARD_STEPS:(S.setupDone?META_STEPS:META_SETUP);
+    el('steplist').innerHTML=steps.map(function(t,i){
+      var cls=i<S.step?'done':(i===S.step?'now':'');
+      return '<li class="'+cls+'">'+(i+1)+'. '+t+'</li>';
+    }).join('');
+
+    if(S.pipes.length===0) el('pipes').innerHTML='<span class="empty">'+T.nothing+'</span>';
+    else el('pipes').innerHTML=S.pipes.map(function(p){
+      return '<div class="pipe'+(p.shared?' shared':'')+'"><b>'+p.title+'</b><span>'+p.sub+'</span></div>';
+    }).join('');
+
+    if(S.round===2&&S.meta.length){
+      el('metaWrap').innerHTML='<table class="mtable"><tr><th>'+T.thS+'</th><th>'+T.thV+'</th><th>'+T.thZ+'</th></tr>'+
+        S.meta.map(function(m){return '<tr><td>'+m.name+'</td><td>'+m.view+'</td><td>'+m.zone+'</td></tr>';}).join('')+
+        '</table>';
+    } else el('metaWrap').innerHTML='';
+  }
+
+  function ctl(html){ el('controls').innerHTML=html; }
+  function task(t,h){ el('taskTitle').textContent=t; el('taskHint').textContent=h; }
+
+  // ---------- ROUND 1: hardcoded ----------
+  function hardStep(){
+    var src=SOURCES[S.src];
+    if(!src){ return finishRound(); }
+    var i=S.step;
+    if(i===0){
+      task(T.t1(src.name),T.t1h);
+      ctl('<button class="btn" id="go">'+T.newPipe+'</button>');
+      el('go').onclick=function(){ bump(); S.step++; hardStep(); };
+    } else if(i===1){
+      task(T.t2,T.t2h);
+      ctl('<select id="sel"><option value="">'+T.selSystem+'</option><option>SAP</option><option>Internal system</option></select><button class="btn" id="go" disabled>'+T.confirm+'</button>');
+      wire();
+    } else if(i===2){
+      task(T.t3,T.t3h(src.name));
+      ctl('<select id="sel"><option value="">'+T.selView+'</option>'+VIEWS.map(function(v){return '<option>'+v+'</option>';}).join('')+'</select><button class="btn" id="go" disabled>'+T.confirm+'</button>');
+      wire();
+    } else if(i===3){
+      task(T.t4,T.t4h);
+      ctl('<div class="cols" id="cols">'+src.cols.map(function(c,ci){return '<button class="col" data-i="'+ci+'">'+c+'</button>';}).join('')+'</div>');
+      var btns=el('cols').querySelectorAll('.col');
+      for(var b=0;b<btns.length;b++){
+        btns[b].onclick=function(){
+          if(this.className.indexOf('mapped')!==-1) return;
+          this.className='col mapped'; S.mapped++; bump();
+          if(S.mapped>=src.cols.length){ S.mapped=0; S.step++; setTimeout(hardStep,260); }
+        };
+      }
+    } else if(i===4){
+      task(T.t5,T.t5h);
+      ctl('<select id="sel"><option value="">'+T.selZone+'</option>'+ZONES.map(function(z){return '<option>'+z+'</option>';}).join('')+'</select><button class="btn" id="go" disabled>'+T.confirm+'</button>');
+      wire();
+    } else if(i===5){
+      task(T.t6,T.t6h);
+      ctl('<select id="sel"><option value="">'+T.selSched+'</option>'+T.sched.map(function(v){return '<option>'+v+'</option>';}).join('')+'</select><button class="btn" id="go" disabled>'+T.confirm+'</button>');
+      wire();
+    } else {
+      task(T.t7,T.t7h);
+      ctl('<button class="btn" id="go">'+T.deploy+'</button>');
+      el('go').onclick=function(){
+        bump();
+        S.pipes.push({title:'pl_'+src.name.replace(/\s/g,'_'),sub:T.hardcodedTag+src.view});
+        S.done++; S.src++; S.step=0;
+        if(S.done>=3){ finishRound(); } else { hardStep(); }
+        paint();
+      };
+    }
+    paint();
+    function wire(){
+      var sel=el('sel'),go=el('go');
+      sel.onchange=function(){ go.disabled=!sel.value; };
+      go.onclick=function(){ bump(); S.step++; hardStep(); };
+    }
+  }
+
+  // ---------- ROUND 2: metadata-driven ----------
+  function metaStep(){
+    if(!S.setupDone){
+      var i=S.step;
+      task(T.setupT(META_SETUP[i]),T.setupH);
+      ctl('<button class="btn" id="go">'+META_SETUP[i]+'</button>');
+      el('go').onclick=function(){
+        bump(); S.step++;
+        if(S.step>=META_SETUP.length){
+          S.setupDone=true; S.step=0;
+          S.pipes=[{title:T.genericPipe,sub:T.genericSub,shared:true}];
+        }
+        metaStep(); paint();
+      };
+      paint(); return;
+    }
+    var src=SOURCES[S.src];
+    if(!src) return finishRound();
+    var j=S.step;
+    if(j===0){
+      task(T.m1(src.name),T.m1h);
+      ctl('<select id="sel"><option value="">'+T.selSystem+'</option><option>SAP</option><option>Internal system</option></select><button class="btn" id="go" disabled>'+T.confirm+'</button>');
+      wire2();
+    } else if(j===1){
+      task(T.m2(src.name),T.m2h);
+      ctl('<select id="sel"><option value="">'+T.selView+'</option>'+VIEWS.map(function(v){return '<option>'+v+'</option>';}).join('')+'</select><button class="btn" id="go" disabled>'+T.confirm+'</button>');
+      wire2();
+    } else if(j===2){
+      task(T.m3(src.name),T.m3h);
+      ctl('<select id="sel"><option value="">'+T.selZone+'</option>'+ZONES.map(function(z){return '<option>'+z+'</option>';}).join('')+'</select><button class="btn" id="go" disabled>'+T.confirm+'</button>');
+      wire2();
+    } else {
+      task(T.m4,T.m4h);
+      ctl('<button class="btn" id="go">'+T.addRow+'</button>');
+      el('go').onclick=function(){
+        bump();
+        S.meta.push({name:src.name,view:src.view,zone:src.zone});
+        S.done++; S.src++; S.step=0;
+        if(S.done>=3) finishRound(); else metaStep();
+        paint();
+      };
+    }
+    paint();
+    function wire2(){
+      var sel=el('sel'),go=el('go');
+      sel.onchange=function(){ go.disabled=!sel.value; };
+      go.onclick=function(){ bump(); S.step++; metaStep(); };
+    }
+  }
+
+  function finishRound(){
+    if(S.round===1){
+      S.totalA=S.actions;
+      S.round=2; S.actions=0; S.done=0; S.src=0; S.step=0; S.pipes=[]; S.meta=[]; S.setupDone=false;
+      el('modeTag').textContent=T.r2tag;
+      el('modeTag').className='mode meta';
+      el('roundTitle').textContent=T.r2title;
+      el('roundHint').textContent=T.r2hint;
+      el('canvasTitle').textContent=T.canvas;
+      task(T.r2begin,T.r2beginH);
+      metaStep(); paint(); return;
+    }
+    S.totalB=S.actions;
+    var marginalA=10, marginalB=4;
+    var cut=Math.round((1-marginalB/marginalA)*100);
+    el('rA').textContent=T.acts(S.totalA);
+    el('rB').textContent=T.acts(S.totalB);
+    el('rAp').textContent=T.rAp;
+    el('rBp').textContent=T.rBp;
+    el('takeaway').innerHTML=T.take(marginalA,marginalB,cut);
+    el('result').className='result on';
+    task(T.doneT,T.doneH);
+    ctl('');
+    paint();
+    el('result').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  el('addFourth').onclick=function(){
+    var a=S.totalA+10, b=S.totalB+4;
+    el('rA').textContent=T.acts(a); el('rB').textContent=T.acts(b);
+    el('rAp').textContent=T.rAp4;
+    el('rBp').textContent=T.rBp4;
+    el('takeaway').innerHTML=T.take4;
+    this.disabled=true;
+  };
+  el('restart').onclick=function(){
+    S={round:1,actions:0,done:0,src:0,step:0,mapped:0,pipes:[],meta:[],setupDone:false,totalA:0,totalB:0};
+    el('modeTag').textContent=T.r1tag; el('modeTag').className='mode';
+    el('roundTitle').textContent=T.r1title;
+    el('roundHint').textContent=T.r1hint;
+    el('result').className='result';
+    el('addFourth').disabled=false;
+    hardStep(); paint();
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  if(LANG==='ja'){
+    for(var uk in UI){ var un=document.querySelector('[data-t="'+uk+'"]'); if(un) un.innerHTML=UI[uk]; }
+    document.title='\u30d1\u30a4\u30d7\u30e9\u30a4\u30f3\u69cb\u7bc9\u30b2\u30fc\u30e0 \u2015 \u500b\u5225\u5b9f\u88c5 vs \u30e1\u30bf\u30c7\u30fc\u30bf\u99c6\u52d5 | Jaydeep Foujdar';
+  }
+  el('modeTag').textContent=T.r1tag;
+  el('roundTitle').textContent=T.r1title;
+  el('roundHint').textContent=T.r1hint;
+  el('canvasTitle').textContent=T.canvas;
+  if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){
+    document.documentElement.setAttribute('data-theme','dark');
+  }
+  hardStep(); paint();
+})();
+</script>
+</body>
+</html>

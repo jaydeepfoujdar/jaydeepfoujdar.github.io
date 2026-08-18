@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT Helpdesk Triage Agent — Interactive Demo | Jaydeep Foujdar</title>
+<meta name="description" content="A working, browser-only simulation of the AI request-triage agents Jaydeep Foujdar builds: intent classification, entity extraction, policy checks and routing.">
+<style>
+:root{
+  --bg:#ffffff;--bg-alt:#f5f8fa;--bg-deep:#0d1b2a;--card:#ffffff;
+  --text:#16232e;--muted:#5b6b7a;--line:#e2e9ef;
+  --accent:#0b7285;--accent-soft:#e3f2f5;--accent-2:#c2410c;--ok:#0f766e;--warn:#b45309;
+  --shadow:0 1px 2px rgba(13,27,42,.06),0 8px 24px rgba(13,27,42,.06);--radius:14px;
+}
+html[data-theme="dark"]{
+  --bg:#0d1b2a;--bg-alt:#122334;--bg-deep:#08131e;--card:#152a3d;
+  --text:#e8eef4;--muted:#9db0c2;--line:#22384d;
+  --accent:#4dd4e8;--accent-soft:#12303c;--accent-2:#fb923c;--ok:#5eead4;--warn:#fbbf24;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+html[lang="ja"] body{line-height:1.8}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px}
+a{color:var(--accent)}
+.top{background:var(--bg-deep);color:#eaf2f7;padding:40px 0 36px}
+.eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#4dd4e8;margin-bottom:10px}
+.top h1{margin:0;font-size:clamp(1.5rem,3.4vw,2.05rem);letter-spacing:-.02em;color:#fff}
+.top p{color:#b6c6d4;max-width:70ch;margin:13px 0 0;font-size:.94rem}
+.demo-note{
+  display:inline-flex;gap:9px;align-items:flex-start;margin-top:18px;padding:11px 15px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:10px;
+  font-size:.82rem;color:#c8d6e2;max-width:74ch;
+}
+main{padding:32px 0 56px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.panel-head{padding:15px 20px;border-bottom:1px solid var(--line);background:var(--bg-alt);display:flex;align-items:center;gap:11px;flex-wrap:wrap;border-radius:13px 13px 0 0}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--ok);flex:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.panel-head b{font-size:.94rem}
+.panel-head .sub{color:var(--muted);font-size:.79rem;margin-left:auto}
+.stage{padding:20px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{
+  background:var(--accent-soft);color:var(--accent);border:1px solid transparent;border-radius:999px;
+  padding:6px 13px;font-size:.79rem;font-weight:600;cursor:pointer;font-family:inherit;text-align:left;
+}
+.chip:hover{border-color:var(--accent)}
+.inputrow{display:flex;gap:10px;flex-wrap:wrap}
+#req{
+  flex:1 1 320px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+  background:var(--bg);color:var(--text);font:inherit;font-size:.92rem;
+}
+#req:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.btn{
+  padding:12px 22px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:#fff;
+  font:inherit;font-weight:650;font-size:.89rem;cursor:pointer;
+}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:var(--card);color:var(--accent)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.trace{margin-top:20px;border-top:1px dashed var(--line);padding-top:18px;display:none}
+.trace.on{display:block}
+.step{
+  display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px dashed var(--line);
+  opacity:0;transform:translateY(6px);transition:opacity .3s ease,transform .3s ease;
+}
+.step.in{opacity:1;transform:none}
+.step:last-child{border-bottom:none}
+.n{
+  flex:none;width:25px;height:25px;border-radius:7px;background:var(--accent);color:#fff;
+  display:grid;place-items:center;font-size:.74rem;font-weight:700;margin-top:2px;
+}
+.step h4{margin:0 0 5px;font-size:.86rem}
+.step .body{font-size:.85rem;color:var(--muted);flex:1;min-width:0}
+.bars{margin-top:9px;display:flex;flex-direction:column;gap:7px}
+.bar{display:grid;grid-template-columns:180px 1fr 46px;gap:10px;align-items:center;font-size:.77rem}
+.bar .track{height:8px;background:var(--bg-alt);border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.bar .fill{height:100%;background:var(--accent);width:0;transition:width .6s ease}
+.bar.top .fill{background:var(--accent-2)}
+.bar .pct{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.ents{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.ent{background:var(--bg-alt);border:1px solid var(--line);border-radius:7px;padding:4px 9px;font-size:.75rem}
+.ent b{color:var(--accent)}
+.verdict{
+  margin-top:18px;padding:16px 18px;border-radius:12px;border:1px solid var(--line);
+  border-left:5px solid var(--ok);background:var(--bg-alt);opacity:0;transition:opacity .35s ease;
+}
+.verdict.esc{border-left-color:var(--warn)}
+.verdict h3{margin:0 0 7px;font-size:1rem}
+.verdict p{margin:0;color:var(--muted);font-size:.87rem}
+.verdict .tagline{
+  display:inline-block;margin-bottom:9px;font-size:.67rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;padding:3px 9px;border-radius:5px;background:var(--ok);color:#fff;
+}
+.verdict.esc .tagline{background:var(--warn)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:14px;text-align:center}
+.stat b{display:block;font-size:1.3rem;color:var(--accent);letter-spacing:-.02em}
+.stat span{font-size:.73rem;color:var(--muted)}
+.how{margin-top:24px;background:var(--bg-alt);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.how h3{margin:0 0 10px;font-size:1rem}
+.how p,.how li{color:var(--muted);font-size:.87rem}
+.how ul{margin:8px 0 0;padding-left:20px}
+.how li{margin-bottom:6px}
+.how strong{color:var(--text)}
+@media(max-width:700px){ .stats{grid-template-columns:repeat(2,1fr)} .bar{grid-template-columns:120px 1fr 42px} }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="eyebrow" data-t="eyebrow">Interactive demo · prototype</div>
+    <h1 data-t="h1">IT Helpdesk Triage Agent</h1>
+    <p data-t="intro">
+      A working miniature of the request-triage agents I build in production. Type an IT request the
+      way a colleague would phrase it, and watch the agent classify intent, pull out entities, apply
+      routing policy, and either resolve it automatically or escalate to a person.
+    </p>
+    <div class="demo-note">
+      <span>&#128274;</span>
+      <span data-t="privacy">
+        This runs <b>entirely in your browser</b> using a transparent rule-based classifier — no
+        network calls, no data leaves this page, and nothing is stored. It demonstrates the
+        <i>decision flow</i> of a production agent, not a language model.
+      </span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <div class="panel">
+      <div class="panel-head">
+        <span class="dot"></span>
+        <b data-t="console">Agent console</b>
+        <span class="sub" data-t="consoleSub">rule-based triage · v1 prototype</span>
+      </div>
+      <div class="stage">
+        <div class="chips" id="chips"></div>
+        <div class="inputrow">
+          <input id="req" type="text" autocomplete="off">
+          <button class="btn" id="run" data-t="runBtn">Triage request</button>
+          <button class="btn ghost" id="reset" data-t="resetBtn">Reset</button>
+        </div>
+        <div class="trace" id="trace"></div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b id="s1">0</b><span data-t="stat1">Requests triaged</span></div>
+      <div class="stat"><b id="s2">0</b><span data-t="stat2">Auto-resolved</span></div>
+      <div class="stat"><b id="s3">0%</b><span data-t="stat3">Automation rate</span></div>
+      <div class="stat"><b id="s4">0 min</b><span data-t="stat4">Handling time saved</span></div>
+    </div>
+
+    <div class="how">
+      <h3 data-t="howH">What this is actually doing</h3>
+      <p data-t="howP">
+        Every production agent I have deployed follows the same four-step decision flow, and this
+        prototype exposes each step rather than hiding it behind a chat bubble:
+      </p>
+      <ul data-t="howList">
+        <li><strong>Intent classification</strong> — scores the request against known categories and shows its confidence, because a triage agent that cannot say how sure it is cannot be trusted to act.</li>
+        <li><strong>Entity extraction</strong> — pulls out the system, the target and the urgency, which is what turns a sentence into an actionable ticket.</li>
+        <li><strong>Policy check</strong> — decides whether this category is genuinely safe to automate. This is the step that matters most: the value is not automating everything, it is knowing what <em>not</em> to automate.</li>
+        <li><strong>Action or escalation</strong> — resolves it, or hands to a human with the triage work already done, so the person starts from a classified request rather than a blank one.</li>
+      </ul>
+      <p style="margin-top:12px" data-t="howP2">
+        In production the classifier is model-backed and the actions call real systems; the
+        confidence thresholds, the policy gate and the escalation path are the parts I actually
+        design — and they are reproduced faithfully here.
+      </p>
+    </div>
+
+  </div>
+</main>
+
+<script>
+(function(){
+  var LANG=(location.search.match(/[?&]lang=([a-z]{2})/i)||[])[1]==='ja'?'ja':'en';
+  document.documentElement.setAttribute('lang',LANG);
+
+  var UI={
+    eyebrow:'体験デモ · プロトタイプ',
+    h1:'ITヘルプデスク振り分けエージェント',
+    intro:'実運用で構築している申請振り分けエージェントを、小さく再現したものです。社内の方が書くような言葉でIT関連の依頼を入力してください。エージェントが意図を分類し、項目を抽出し、ルールを確認したうえで、自動対応するか担当者へ引き継ぐまでをご覧いただけます。',
+    privacy:'この処理は<b>すべてブラウザー内で完結</b>します。ルールベースの分類器を用いており、通信は発生せず、入力内容がこのページの外に出ることも、保存されることもありません。言語モデルではなく、実運用エージェントの<i>判断の流れ</i>を示すことを目的としています。',
+    console:'エージェント コンソール',
+    consoleSub:'ルールベース振り分け · v1 プロトタイプ',
+    runBtn:'依頼を振り分ける',
+    resetBtn:'リセット',
+    stat1:'振り分けた依頼',
+    stat2:'自動対応',
+    stat3:'自動化率',
+    stat4:'削減した対応時間',
+    howH:'ここで実際に行われている処理',
+    howP:'これまで実運用に導入したエージェントは、いずれも同じ4段階の判断の流れをたどります。本プロトタイプでは、その各段階をチャットの裏に隠さず、あえて表に出しています。',
+    howList:'<li><strong>意図の分類</strong> ― 既知のカテゴリーと照合してスコアを算出し、確信度を表示します。どの程度確かなのかを示せないエージェントに、判断を任せることはできないためです。</li>'+
+            '<li><strong>項目の抽出</strong> ― 対象システム、対象、緊急度を取り出します。これが、一文を実際に処理できる依頼へ変える工程です。</li>'+
+            '<li><strong>ポリシー確認</strong> ― そのカテゴリーを本当に自動化してよいかを判断します。ここが最も重要です。価値はすべてを自動化することではなく、<em>何を自動化しないか</em>を見極めることにあります。</li>'+
+            '<li><strong>対応または引き継ぎ</strong> ― 自動で完了させるか、振り分け済みの状態で担当者へ引き継ぎます。担当者は白紙からではなく、分類済みの依頼から着手できます。</li>',
+    howP2:'実運用では分類器にモデルを用い、処理は実システムを呼び出します。確信度のしきい値、ポリシーによる判定、引き継ぎの経路といった設計の要点は、ここでも忠実に再現しています。',
+    placeholder:'例：経理レポート用のSharePointフォルダにアクセスしたいです'
+  };
+
+  var MSG={
+    en:{
+      recv:'Request received', cls:'Intent classification', ent:'Entity extraction', pol:'Policy check',
+      scored:function(n){return 'Scored against '+n+' known request categories.';},
+      entLead:'Pulled the actionable fields out of the sentence.',
+      sysK:'System', priK:'Priority', chK:'Channel', hi:'High', norm:'Normal', portal:'Self-service portal',
+      noCat:'No category cleared the confidence threshold. Policy: never guess — route to a human.',
+      notAuto:function(l){return 'Category <b>'+l+'</b> is deliberately excluded from auto-resolution. It needs judgement, physical action or an approval a person must own.';},
+      urgent:function(l){return 'Category <b>'+l+'</b> is auto-resolvable, but priority is <b>High</b> — resolving automatically <i>and</i> notifying the on-call owner so nobody is surprised.';},
+      ok:function(l){return 'Category <b>'+l+'</b> is rule-based and safe to automate. Confidence is above threshold.';},
+      autoTag:'Auto-resolved', escTag:'Escalated with context', unknown:'Unrecognised request',
+      unknownAct:'Could not classify this with enough confidence to act. Routed to the service desk with the original wording preserved — a wrong automated action costs more than a human glance.',
+      min:function(m){return m+' min';}
+    },
+    ja:{
+      recv:'依頼を受け付けました', cls:'意図の分類', ent:'項目の抽出', pol:'ポリシー確認',
+      scored:function(n){return '既知の'+n+'カテゴリーと照合しました。';},
+      entLead:'文章から、処理に必要な項目を取り出しました。',
+      sysK:'システム', priK:'優先度', chK:'受付経路', hi:'高', norm:'通常', portal:'セルフサービス窓口',
+      noCat:'確信度のしきい値を超えるカテゴリーがありませんでした。推測はしない ― これがルールです。担当者へ引き継ぎます。',
+      notAuto:function(l){return 'カテゴリー「<b>'+l+'</b>」は、意図的に自動対応の対象外としています。判断、物理的な作業、または人が負うべき承認が必要なためです。';},
+      urgent:function(l){return 'カテゴリー「<b>'+l+'</b>」は自動対応が可能ですが、優先度が<b>高</b>です。自動で対応したうえで担当者にも通知し、把握されない状態を作りません。';},
+      ok:function(l){return 'カテゴリー「<b>'+l+'</b>」はルールが明確で、自動化しても問題ありません。確信度もしきい値を上回っています。';},
+      autoTag:'自動対応済み', escTag:'引き継ぎ（情報付き）', unknown:'分類できない依頼',
+      unknownAct:'判断して処理できるだけの確信度が得られませんでした。元の文面をそのまま残し、サービスデスクへ引き継ぎます。誤った自動処理は、人がひと目確認する手間よりも高くつきます。',
+      min:function(m){return m+'分';}
+    }
+  };
+  var M=MSG[LANG];
+
+  if(LANG==='ja'){
+    for(var k in UI){
+      var node=document.querySelector('[data-t="'+k+'"]');
+      if(node) node.innerHTML=UI[k];
+    }
+    document.title='ITヘルプデスク振り分けエージェント ― 体験デモ | Jaydeep Foujdar';
+  }
+  document.getElementById('req').setAttribute('placeholder',
+    LANG==='ja'?UI.placeholder:'e.g. I need access to the finance reporting folder in SharePoint');
+
+  var CATS=[
+    { auto:true, mins:14,
+      label:{en:'Access request',ja:'アクセス権限の依頼'},
+      strong:['access','permission','permissions','denied','cannot open','アクセス','権限','開けない'],
+      kw:['access','permission','folder','share','shared','sharepoint','drive','add me','denied','rbac','acl','group','site','フォルダ','共有','閲覧','許可','サイト'],
+      action:{en:'Matched the requester to the owning security group and granted least-privilege read access via the standard entitlement flow. Owner notified for audit.',
+              ja:'申請者を管理元のセキュリティグループに紐付け、標準の権限付与フローで必要最小限の参照権限を付与しました。監査のため管理者にも通知しています。'} },
+    { auto:true, mins:9,
+      label:{en:'Password / sign-in',ja:'パスワード・サインイン'},
+      strong:['password','locked out','mfa','otp','2fa','パスワード','ロック','多要素'],
+      kw:['reset','locked','lock out','sign in','signin','login','log in','authenticator','ログイン','サインイン','認証','リセット','解除'],
+      action:{en:'Verified identity against directory signals and issued a self-service reset link with MFA re-enrolment. No credential is ever handled by the agent.',
+              ja:'ディレクトリ上の情報で本人確認を行い、多要素認証の再登録を含むセルフサービスのリセットリンクを発行しました。認証情報そのものをエージェントが扱うことはありません。'} },
+    { auto:true, mins:11,
+      label:{en:'Network / VPN',ja:'ネットワーク・VPN'},
+      strong:['vpn','wifi','wi-fi','proxy','ネットワーク','無線'],
+      kw:['network','connect','connection','remote','disconnect','internet','接続','切断','社外','リモート','通信'],
+      action:{en:'Ran the standard connectivity checklist, reissued the client profile and sent step-by-step reconnection guidance.',
+              ja:'標準の接続確認手順を実行し、クライアント設定を再発行したうえで、再接続の手順をご案内しました。'} },
+    { auto:true, mins:13,
+      label:{en:'Software / licence',ja:'ソフトウェア・ライセンス'},
+      strong:['install','installation','licence','license','setup','download','upgrade','subscription','インストール','ライセンス','導入','セットアップ'],
+      kw:['software','office','teams','excel','app','application','ソフト','アプリ','購入'],
+      action:{en:'Confirmed licence availability against the entitlement pool and queued a managed deployment to the requester device.',
+              ja:'ライセンスの空き状況を管理台帳で確認し、申請者の端末への配布を管理配信のキューに登録しました。'} },
+    { auto:true, mins:17,
+      label:{en:'Report / data request',ja:'レポート・データ依頼'},
+      strong:['report','dashboard','kpi','data request','レポート','ダッシュボード','帳票','指標'],
+      kw:['power bi','powerbi','metric','metrics','chart','export','figures','numbers','集計','出力','数値','グラフ'],
+      action:{en:'Located the governed dataset in the curated layer and shared the existing certified report rather than creating a duplicate extract.',
+              ja:'整備済みの層で管理対象のデータセットを特定し、新たに抽出を作らずに既存の認定済みレポートを共有しました。'} },
+    { auto:false, mins:6,
+      label:{en:'Data pipeline issue',ja:'データパイプラインの障害'},
+      strong:['pipeline','data factory','adf','etl','ingestion','パイプライン','取り込み','連携'],
+      kw:['failed','failure','refresh','load','dataset','sync','job','sap','extract','stale','失敗','エラー','更新','同期','ジョブ','止ま'],
+      action:{en:'Correlated the failure to the owning pipeline and its last successful run, attached the run history, and escalated to the on-call data engineer.',
+              ja:'障害を該当パイプラインおよび直近の正常終了時点と突き合わせ、実行履歴を添えて担当のデータエンジニアへ引き継ぎました。'} },
+    { auto:false, mins:5,
+      label:{en:'Hardware',ja:'ハードウェア'},
+      strong:['monitor','printer','keyboard','charger','headset','docking','モニター','プリンター','キーボード','故障'],
+      kw:['laptop','mouse','screen','battery','device','broken','パソコン','ノートpc','画面','壊れ','映らな','電源'],
+      action:{en:'Logged the asset against the requester and routed to on-site IT support — physical hardware always needs a person.',
+              ja:'対象機器を申請者に紐付けて登録し、現地のIT担当へ引き継ぎました。物理的な機器の対応には、必ず人の手が必要です。'} },
+    { auto:false, mins:8,
+      label:{en:'Joiner / leaver',ja:'入退社・異動'},
+      strong:['new joiner','onboarding','offboarding','new employee','leaver','入社','退職','異動','着任'],
+      kw:['joiner','onboard','starter','offboard','resign','transfer','アカウント作成','受け入れ','手続き'],
+      action:{en:'Assembled the standard provisioning checklist and routed to HR operations for approval — identity lifecycle changes require human sign-off.',
+              ja:'標準の準備チェックリストを作成し、承認のため人事部門へ引き継ぎました。ID管理に関わる変更には、人による承認が必要です。'} }
+  ];
+
+  var SYSTEMS=['SAP','SharePoint','Power BI','ADLS','Azure','Teams','Outlook','Excel','VPN','Entra ID','OneDrive'];
+  var URGENT=['urgent','asap','critical','immediately','blocked','blocking','production','today','emergency','down',
+              '至急','緊急','今日中','本番','停止','止ま','間に合'];
+
+  var SAMPLES={
+    en:['I need access to the finance reporting folder in SharePoint',
+        'The SAP sales pipeline failed overnight and the dashboard is stale',
+        'Locked out of my account, MFA is not sending a code',
+        'Can someone install Power BI Desktop on my laptop?',
+        'My monitor stopped working this morning',
+        'Urgent: production data refresh is down before the board meeting',
+        'New joiner starts Monday and needs accounts set up'],
+    ja:['経理レポート用のSharePointフォルダにアクセスしたいです',
+        'SAPの売上パイプラインが夜間に失敗し、ダッシュボードが更新されていません',
+        'アカウントがロックされ、多要素認証のコードが届きません',
+        'ノートPCにPower BI Desktopをインストールしてほしいです',
+        '朝からモニターが映らなくなりました',
+        '至急：本番データの更新が停止しており、役員会議に間に合いません',
+        '来週月曜に入社する社員のアカウント作成をお願いします']
+  }[LANG];
+
+  var el=function(id){return document.getElementById(id);};
+  var trace=el('trace'), stats={n:0,auto:0,mins:0};
+
+  SAMPLES.forEach(function(t){
+    var b=document.createElement('button');
+    b.className='chip'; b.type='button'; b.textContent=t;
+    b.addEventListener('click',function(){ el('req').value=t; run(); });
+    el('chips').appendChild(b);
+  });
+
+  function score(text){
+    var t=' '+text.toLowerCase()+' ';
+    return CATS.map(function(c){
+      var hits=0;
+      c.kw.forEach(function(k){ if(t.indexOf(k)!==-1) hits+=(k.indexOf(' ')!==-1?2:1); });
+      (c.strong||[]).forEach(function(k){ if(t.indexOf(k)!==-1) hits+=3; });
+      return {cat:c,raw:hits};
+    }).sort(function(a,b){ return b.raw-a.raw; });
+  }
+  function entities(text){
+    var t=text.toLowerCase(), out=[];
+    SYSTEMS.forEach(function(s){ if(t.indexOf(s.toLowerCase())!==-1) out.push({k:M.sysK,v:s}); });
+    var urgent=URGENT.some(function(u){ return t.indexOf(u)!==-1; });
+    out.push({k:M.priK,v:urgent?M.hi:M.norm});
+    out.push({k:M.chK,v:M.portal});
+    return {list:out,urgent:urgent};
+  }
+  function esc(s){ return s.replace(/[&<>]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
+  function step(n,title,bodyHTML){
+    var d=document.createElement('div');
+    d.className='step';
+    d.innerHTML='<span class="n">'+n+'</span><div class="body"><h4>'+title+'</h4>'+bodyHTML+'</div>';
+    trace.appendChild(d); return d;
+  }
+
+  function run(){
+    var text=el('req').value.trim();
+    if(!text){ el('req').focus(); return; }
+    el('run').disabled=true;
+    trace.innerHTML=''; trace.className='trace on';
+
+    var ranked=score(text), total=ranked.reduce(function(a,b){return a+b.raw;},0);
+    var ents=entities(text), best=ranked[0], known=best.raw>0;
+    var conf=known?Math.min(0.96,0.42+(best.raw/Math.max(total,1))*0.55):0;
+    var steps=[];
+
+    steps.push(function(){ return step(1,M.recv,'<div>&ldquo;'+esc(text)+'&rdquo;</div>'); });
+
+    steps.push(function(){
+      var rows=ranked.slice(0,3).map(function(r,i){
+        var pct=known?Math.round((r.raw/Math.max(total,1))*100):0;
+        if(i===0&&known) pct=Math.round(conf*100);
+        return '<div class="bar'+(i===0&&known?' top':'')+'"><span>'+r.cat.label[LANG]+'</span>'+
+               '<span class="track"><span class="fill" data-w="'+pct+'"></span></span>'+
+               '<span class="pct">'+pct+'%</span></div>';
+      }).join('');
+      var d=step(2,M.cls,'<div>'+M.scored(CATS.length)+'</div><div class="bars">'+rows+'</div>');
+      setTimeout(function(){
+        var f=d.querySelectorAll('.fill');
+        for(var i=0;i<f.length;i++) f[i].style.width=f[i].getAttribute('data-w')+'%';
+      },60);
+      return d;
+    });
+
+    steps.push(function(){
+      var chips=ents.list.map(function(e){ return '<span class="ent"><b>'+e.k+':</b> '+esc(e.v)+'</span>'; }).join('');
+      return step(3,M.ent,'<div>'+M.entLead+'</div><div class="ents">'+chips+'</div>');
+    });
+
+    steps.push(function(){
+      var msg;
+      if(!known) msg=M.noCat;
+      else if(!best.cat.auto) msg=M.notAuto(best.cat.label[LANG]);
+      else if(ents.urgent) msg=M.urgent(best.cat.label[LANG]);
+      else msg=M.ok(best.cat.label[LANG]);
+      return step(4,M.pol,'<div>'+msg+'</div>');
+    });
+
+    steps.push(function(){
+      var autoOK=known&&best.cat.auto, mins=known?best.cat.mins:4;
+      var v=document.createElement('div');
+      v.className='verdict'+(autoOK?'':' esc');
+      v.innerHTML='<span class="tagline">'+(autoOK?M.autoTag:M.escTag)+'</span>'+
+        '<h3>'+(known?best.cat.label[LANG]:M.unknown)+'</h3>'+
+        '<p>'+(known?best.cat.action[LANG]:M.unknownAct)+'</p>';
+      trace.appendChild(v);
+      setTimeout(function(){ v.style.opacity=1; },10);
+      stats.n++; if(autoOK) stats.auto++;
+      stats.mins+=autoOK?mins:Math.round(mins*0.4);
+      el('s1').textContent=stats.n;
+      el('s2').textContent=stats.auto;
+      el('s3').textContent=Math.round((stats.auto/stats.n)*100)+'%';
+      el('s4').textContent=M.min(stats.mins);
+      el('run').disabled=false;
+      return v;
+    });
+
+    var i=0;
+    (function next(){
+      if(i>=steps.length) return;
+      var node=steps[i++]();
+      if(node&&node.className&&node.className.indexOf('step')===0) setTimeout(function(){ node.className+=' in'; },20);
+      setTimeout(next,620);
+    })();
+  }
+
+  el('run').addEventListener('click',run);
+  el('req').addEventListener('keydown',function(e){ if(e.key==='Enter') run(); });
+  el('reset').addEventListener('click',function(){
+    stats={n:0,auto:0,mins:0};
+    el('s1').textContent='0'; el('s2').textContent='0';
+    el('s3').textContent='0%'; el('s4').textContent=M.min(0);
+    trace.innerHTML=''; trace.className='trace';
+    el('req').value=''; el('req').focus();
+  });
+  el('s4').textContent=M.min(0);
+
+  if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)
+    document.documentElement.setAttribute('data-theme','dark');
+})();
+</script>
+</body>
+</html>

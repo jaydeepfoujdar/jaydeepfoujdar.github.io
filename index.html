@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Jaydeep Foujdar — Lead Project Engineer, Cloud &amp; Data Platforms</title>
+<meta content="Jaydeep Foujdar — Lead Project Engineer (Cloud &amp; SaaS) in Tokyo, Japan. Azure data platforms, Power Platform digitization, AI agents and embedded systems. JLPT N1, TOEIC 990." name="description"/>
+<meta content="Jaydeep Foujdar" name="author"/>
+<meta content="Jaydeep Foujdar — Lead Project Engineer, Cloud &amp; Data Platforms" property="og:title"/>
+<meta content="Cloud data engineering, enterprise digitization and AI automation — delivered bilingually in Tokyo, Japan." property="og:description"/>
+<meta content="website" property="og:type"/>
+<link href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;rect width='100' height='100' rx='22' fill='%230b7285'/&gt;&lt;text x='50' y='68' font-size='54' font-family='Georgia,serif' fill='white' text-anchor='middle'&gt;JF&lt;/text&gt;&lt;/svg&gt;" rel="icon"/>
+<style>
+:root{
+  --bg:#ffffff;
+  --bg-alt:#f5f8fa;
+  --bg-deep:#0d1b2a;
+  --card:#ffffff;
+  --text:#16232e;
+  --muted:#5b6b7a;
+  --line:#e2e9ef;
+  --accent:#0b7285;
+  --accent-soft:#e3f2f5;
+  --accent-2:#c2410c;
+  --shadow:0 1px 2px rgba(13,27,42,.06),0 8px 24px rgba(13,27,42,.06);
+  --radius:14px;
+  --maxw:1080px;
+}
+html[data-theme="dark"]{
+  --bg:#0d1b2a;
+  --bg-alt:#122334;
+  --bg-deep:#08131e;
+  --card:#152a3d;
+  --text:#e8eef4;
+  --muted:#9db0c2;
+  --line:#22384d;
+  --accent:#4dd4e8;
+  --accent-soft:#12303c;
+  --accent-2:#fb923c;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+section{padding:76px 0;border-top:1px solid var(--line)}
+section:first-of-type{border-top:none}
+h1,h2,h3,h4{line-height:1.25;margin:0}
+h2{font-size:1.75rem;letter-spacing:-.01em}
+.eyebrow{
+  font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px;
+}
+.lead{color:var(--muted);max-width:70ch;margin-top:12px}
+
+/* ---------- nav ---------- */
+header.nav{
+  position:sticky;top:0;z-index:50;background:var(--bg);background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:saturate(160%) blur(10px);border-bottom:1px solid var(--line);
+}
+.nav-in{max-width:var(--maxw);margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:16px}
+.brand{font-weight:700;letter-spacing:-.01em;font-size:1.02rem;color:var(--text)}
+.brand:hover{text-decoration:none}
+.brand span{color:var(--accent)}
+.nav-links{margin-left:auto;display:flex;gap:22px;align-items:center}
+.nav-links a{color:var(--muted);font-size:.9rem;font-weight:500}
+.nav-links a:hover{color:var(--accent);text-decoration:none}
+.icon-btn{
+  border:1px solid var(--line);background:var(--card);color:var(--text);
+  width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:1rem;
+  display:grid;place-items:center;flex:none;
+}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+.menu-btn{display:none}
+.lang-btn{width:auto;padding:0 12px;font-size:.78rem;font-weight:700;letter-spacing:.02em}
+html[lang="ja"] body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","Yu Gothic",Meiryo,sans-serif;
+  line-height:1.85;
+}
+html[lang="ja"] p,html[lang="ja"] li{text-align:justify}
+html[lang="ja"] h1,html[lang="ja"] h2,html[lang="ja"] h3,html[lang="ja"] h4{letter-spacing:.01em;line-height:1.45}
+html[lang="ja"] .eyebrow,html[lang="ja"] .dg-title,html[lang="ja"] .badge,html[lang="ja"] .cat,html[lang="ja"] .ba-box h5{letter-spacing:.06em}
+html[lang="ja"] .node b{font-size:.76rem}
+html[lang="ja"] .node span{font-size:.68rem;line-height:1.5}
+html[lang="ja"] .hero h1{font-size:clamp(1.6rem,3.4vw,2.3rem)}
+html[lang="ja"] .when{font-size:.82rem}
+
+/* ---------- hero ---------- */
+.hero{background:var(--bg-deep);color:#eaf2f7;padding:84px 0 72px;border:none}
+.hero .wrap{display:grid;grid-template-columns:1.55fr .95fr;gap:52px;align-items:center}
+.hero h1{font-size:clamp(2.1rem,4.6vw,3.1rem);letter-spacing:-.025em;color:#fff}
+.hero .role{color:#4dd4e8;font-weight:600;margin-top:10px;font-size:1.12rem}
+.hero p.bio{color:#b6c6d4;margin:18px 0 0;max-width:62ch}
+.hero .loc{display:flex;gap:16px;flex-wrap:wrap;color:#8fa5b8;font-size:.9rem;margin-top:16px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;
+  font-weight:600;font-size:.92rem;border:1px solid transparent;cursor:pointer;
+}
+.btn:hover{text-decoration:none;transform:translateY(-1px)}
+.btn-primary{background:#4dd4e8;color:#06202b}
+.btn-primary:hover{background:#7ce3f2}
+.btn-ghost{border-color:#3c5872;color:#dbe7ef}
+.btn-ghost:hover{border-color:#4dd4e8;color:#4dd4e8}
+.stat-card{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+  border-radius:var(--radius);padding:22px;
+}
+.stat-card h4{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#8fa5b8;margin-bottom:14px}
+.stat{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px dashed rgba(255,255,255,.12);font-size:.9rem}
+.stat:last-child{border-bottom:none}
+.stat b{color:#fff;font-weight:600}
+.stat span{color:#9fb4c6;text-align:right}
+
+/* ---------- generic cards ---------- */
+.grid{display:grid;gap:20px}
+#projects .grid{align-items:stretch}
+#projects .grid.has-open{align-items:start}
+#projects details.proj-card{scroll-margin-top:80px}
+#demos .grid > .demo-card:last-child:nth-child(odd){grid-column:1/-1}
+#projects details.proj-card.fill-row{grid-column:1/-1}
+#projects details.proj-card[open]{
+  grid-column:1/-1;margin:12px 0;
+  border-color:var(--accent);
+  border-left:5px solid var(--accent);
+  box-shadow:0 0 0 3px var(--accent-soft),0 16px 38px rgba(13,27,42,.14);
+}
+#projects details.proj-card[open]>summary{
+  background:var(--accent-soft);border-bottom:1px solid var(--line);
+  border-radius:9px 9px 0 0;
+}
+#projects details.proj-card[open]>summary .cat{color:var(--accent)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px;box-shadow:var(--shadow);
+}
+.card h3{font-size:1.05rem}
+
+/* ---------- skills ---------- */
+.skill-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.skill-head .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none}
+.skill-head h3{font-size:.96rem}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{
+  background:var(--accent-soft);color:var(--accent);border:1px solid transparent;
+  padding:5px 11px;border-radius:999px;font-size:.8rem;font-weight:600;
+}
+.tag.plain{background:transparent;border-color:var(--line);color:var(--muted)}
+
+/* ---------- timeline ---------- */
+.tl{position:relative;padding-left:30px}
+.tl::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.job{position:relative;padding-bottom:34px}
+.job:last-child{padding-bottom:0}
+.job::before{
+  content:"";position:absolute;left:-27px;top:7px;width:14px;height:14px;border-radius:50%;
+  background:var(--bg);border:3px solid var(--accent);
+}
+.job-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:baseline}
+.job h3{font-size:1.08rem}
+.job .org{color:var(--accent);font-weight:600;font-size:.94rem;margin-top:2px}
+.when{color:var(--muted);font-size:.85rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.job ul{margin:12px 0 0;padding-left:19px;color:var(--muted)}
+.job li{margin-bottom:7px}
+.job li strong{color:var(--text);font-weight:600}
+
+/* ---------- projects ---------- */
+.feat{
+  border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--card);box-shadow:var(--shadow);margin-bottom:26px;
+}
+.feat-head{padding:26px 28px;border-bottom:1px solid var(--line);background:var(--bg-alt);border-radius:13px 13px 0 0}
+.badge{
+  display:inline-block;background:var(--accent);color:#fff;font-size:.68rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:5px;margin-bottom:12px;
+}
+.feat-head h3{font-size:1.35rem;letter-spacing:-.01em}
+.feat-head .sub{color:var(--muted);font-size:.92rem;margin-top:7px}
+.feat-body{padding:26px 28px;display:grid;grid-template-columns:1.5fr 1fr;gap:34px}
+.blk{margin-bottom:22px}
+.blk:last-child{margin-bottom:0}
+.blk h4{
+  font-size:.74rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:9px;
+}
+.blk p{margin:0;color:var(--muted)}
+.blk ul{margin:0;padding-left:19px;color:var(--muted)}
+.blk li{margin-bottom:8px}
+.blk li strong{color:var(--text);font-weight:600}
+.flow{display:flex;flex-direction:column;gap:9px;margin:0;padding:0;list-style:none;counter-reset:s}
+.flow li{
+  display:flex;gap:12px;align-items:flex-start;background:var(--bg-alt);
+  border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:.88rem;color:var(--muted);
+}
+.flow li b{display:block;color:var(--text);font-size:.9rem;margin-bottom:1px}
+.flow .n{
+  flex:none;width:24px;height:24px;border-radius:7px;background:var(--accent);color:#fff;
+  display:grid;place-items:center;font-size:.76rem;font-weight:700;margin-top:1px;
+}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+.metric{background:var(--bg-alt);border:1px solid var(--line);border-radius:11px;padding:14px}
+.metric b{display:block;font-size:1.3rem;color:var(--accent);letter-spacing:-.02em;line-height:1.2}
+.metric span{font-size:.78rem;color:var(--muted)}
+.note{
+  display:flex;gap:11px;align-items:flex-start;background:var(--accent-soft);
+  border-left:3px solid var(--accent);border-radius:0 9px 9px 0;padding:13px 15px;
+  font-size:.84rem;color:var(--muted);margin-top:22px;
+}
+.note b{color:var(--text)}
+.proj-card{display:flex;flex-direction:column}
+.proj-card .cat{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-2);font-weight:700;margin-bottom:8px}
+.proj-card p{color:var(--muted);font-size:.91rem;margin:9px 0 16px;flex:1}
+.proj-card .tags{margin-top:auto}
+
+/* ---------- expandable project tiles ---------- */
+details.proj-card{display:block;padding:0;overflow:visible}
+details.proj-card>summary{
+  display:flex;flex-direction:column;padding:24px;cursor:pointer;
+  list-style:none;position:relative;
+}
+details.proj-card:not([open])>summary{height:100%}
+details.proj-card>summary::-webkit-details-marker{display:none}
+details.proj-card>summary::marker{content:""}
+details.proj-card>summary:focus-visible{outline:2px solid var(--accent);outline-offset:-3px;border-radius:var(--radius)}
+.expand{
+  display:inline-flex;align-items:center;gap:7px;margin-top:16px;
+  color:var(--accent);font-size:.82rem;font-weight:600;
+}
+.expand .chev{transition:transform .25s ease;font-size:.7rem}
+details[open]>summary .expand .chev{transform:rotate(180deg)}
+details[open]>summary .expand .lbl-open{display:inline}
+details[open]>summary .expand .lbl-shut{display:none}
+.expand .lbl-open{display:none}
+details.proj-card>summary:hover .expand{text-decoration:underline}
+.detail{padding:4px 24px 24px;border-top:1px solid var(--line);margin-top:2px;animation:drop .28s ease}
+@keyframes drop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.detail{animation:none}.expand .chev{transition:none}}
+.detail .blk{margin-top:20px}
+.collapse-bar{
+  display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+  margin:26px -24px -24px;padding:14px 24px;background:var(--bg-alt);
+  border-top:1px solid var(--line);border-radius:0 0 9px 9px;
+}
+.collapse-bar .end-note{font-size:.78rem;color:var(--muted)}
+.collapse{
+  display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+  background:var(--card);border:1px solid var(--accent);color:var(--accent);
+  font:inherit;font-size:.82rem;font-weight:600;padding:8px 16px;border-radius:9px;
+}
+.collapse:hover{background:var(--accent);color:#fff}
+.collapse:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.expand{
+  align-self:flex-start;padding:7px 14px;border-radius:9px;
+  border:1px solid var(--accent);background:var(--card);
+}
+details[open]>summary .expand{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ---------- flow diagrams ---------- */
+.diagram{
+  margin:12px 0 0;padding:16px;background:var(--bg-alt);
+  border:1px solid var(--line);border-radius:12px;
+}
+.dg-title{
+  font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);font-weight:700;margin-bottom:13px;
+}
+.dg-scroll{padding-bottom:2px}
+.flowchart{
+  display:flex;flex-wrap:wrap;align-items:stretch;justify-content:center;
+  gap:8px 0;
+}
+.node{
+  flex:1 1 130px;min-width:116px;background:var(--card);border:1px solid var(--line);
+  border-top:3px solid var(--accent);border-radius:10px;padding:11px 12px;text-align:center;
+}
+.node b{display:block;font-size:.79rem;color:var(--text);line-height:1.35}
+.node span{display:block;font-size:.7rem;color:var(--muted);margin-top:3px;line-height:1.4}
+.node.hl{border-top-color:var(--accent-2);background:var(--accent-soft)}
+.arrow{
+  flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+  padding:0 9px;color:var(--accent);font-size:1.05rem;font-weight:700;
+}
+@media(max-width:620px){
+  .flowchart{flex-direction:column;gap:0}
+  .node{flex:0 0 auto;width:100%;min-width:0}
+  .arrow{padding:6px 0;transform:rotate(90deg)}
+}
+.gov-bar{
+  margin-top:11px;padding:10px 13px;border:1px dashed var(--accent);border-radius:9px;
+  background:var(--accent-soft);font-size:.78rem;color:var(--muted);text-align:center;
+}
+.gov-bar b{color:var(--accent);font-weight:700}
+.ba{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin-top:12px}
+.ba-box{border:1px solid var(--line);border-radius:10px;padding:12px 13px;background:var(--card)}
+.ba-box h5{margin:0 0 6px;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ba-box.good h5{color:var(--accent)}
+.ba-box p{margin:0;font-size:.79rem;color:var(--muted);line-height:1.5}
+.ba .vs{color:var(--accent);font-weight:700;font-size:1.05rem}
+@media(max-width:720px){
+  .ba{grid-template-columns:1fr;gap:8px}
+  .ba .vs{text-align:center}
+  .detail{padding:4px 20px 22px}
+  details.proj-card>summary{padding:20px}
+}
+
+/* ---------- demo cards + modal ---------- */
+.demo-card{display:flex;flex-direction:column}
+.demo-card p{color:var(--muted);font-size:.91rem;margin:9px 0 16px;flex:1}
+.btn-demo{
+  align-self:flex-start;font:inherit;font-size:.85rem;font-weight:600;cursor:pointer;
+  padding:9px 17px;border-radius:9px;border:1px solid var(--accent);
+  background:var(--accent);color:#fff;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-demo:hover{filter:brightness(1.08)}
+.btn-demo:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.modal{
+  position:fixed;inset:0;z-index:200;display:none;
+  background:rgba(8,19,30,.72);backdrop-filter:blur(3px);padding:20px;
+}
+.modal.on{display:grid;place-items:center}
+.modal-in{
+  width:min(1120px,96vw);height:min(90vh,940px);background:var(--bg);
+  border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.4);
+}
+.modal-bar{
+  display:flex;align-items:center;gap:12px;padding:11px 14px;
+  border-bottom:1px solid var(--line);background:var(--bg-alt);flex:none;
+}
+.modal-bar b{font-size:.92rem}
+.modal-bar .sp{margin-left:auto}
+.modal-bar a{font-size:.8rem;color:var(--accent);font-weight:600}
+.modal-bar button{
+  font:inherit;font-size:1rem;line-height:1;cursor:pointer;width:34px;height:34px;
+  border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);
+}
+.modal-bar button:hover{border-color:var(--accent);color:var(--accent)}
+#modalFrame{flex:1;width:100%;border:0;background:var(--bg)}
+body.locked{overflow:hidden}
+@media(max-width:620px){ .modal{padding:0} .modal-in{width:100vw;height:100vh;border-radius:0} }
+
+/* ---------- education / awards ---------- */
+.edu{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:baseline}
+.edu h3{font-size:1rem}
+.edu .org{color:var(--accent);font-size:.9rem;font-weight:600;margin-top:3px}
+.award-list{list-style:none;margin:0;padding:0}
+.award-list li{
+  display:flex;gap:11px;align-items:flex-start;padding:10px 0;
+  border-bottom:1px dashed var(--line);color:var(--muted);font-size:.92rem;
+}
+.award-list li:last-child{border-bottom:none}
+.award-list .mk{color:var(--accent);flex:none;font-weight:700}
+.award-list strong{color:var(--text);font-weight:600}
+
+/* ---------- contact ---------- */
+.contact{background:var(--bg-deep);color:#eaf2f7;border:none;text-align:center}
+.contact h2{color:#fff}
+.contact p{color:#b6c6d4;max-width:56ch;margin:14px auto 0}
+.contact .cta{justify-content:center}
+footer{background:var(--bg-deep);color:#7d94a8;text-align:center;padding:26px 24px;font-size:.83rem;border-top:1px solid rgba(255,255,255,.08)}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s ease}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+
+/* ---------- responsive ---------- */
+@media(max-width:900px){
+  .hero .wrap{grid-template-columns:1fr;gap:34px}
+  .feat-body{grid-template-columns:1fr;gap:26px}
+  .g3{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:720px){
+  .menu-btn{display:grid}
+  .nav-links{
+    display:none;position:absolute;top:63px;left:0;right:0;background:var(--bg);
+    border-bottom:1px solid var(--line);flex-direction:column;gap:0;padding:8px 24px 16px;
+  }
+  .nav-links.open{display:flex}
+  .nav-links a{padding:9px 0;width:100%;border-bottom:1px solid var(--line)}
+  .g2,.g3{grid-template-columns:1fr}
+  section{padding:56px 0}
+  .feat-head,.feat-body{padding:22px 20px}
+  .metrics{grid-template-columns:1fr 1fr}
+}
+@media print{
+  header.nav,.cta,.contact .cta,#theme,.menu-btn,.expand,.collapse-bar{display:none!important}
+  .detail{display:block!important}
+  details.proj-card>summary{padding-bottom:0}
+  .hero,.contact,footer{background:#fff!important;color:#000!important}
+  .hero h1,.contact h2{color:#000!important}
+  .hero p.bio,.hero .loc,.contact p,.stat span{color:#333!important}
+  .stat b,.hero .role{color:#000!important}
+  body{font-size:11pt}
+  section{padding:18px 0;break-inside:avoid}
+  .card,.feat{box-shadow:none;break-inside:avoid}
+  .rv{opacity:1;transform:none}
+}
+</style>
+<noscript><style>.rv{opacity:1!important;transform:none!important}</style></noscript>
+</head>
+<body>
+<header class="nav">
+<div class="nav-in">
+<a class="brand" data-i18n="0" href="#top">Jaydeep <span>Foujdar</span></a>
+<nav class="nav-links" id="navlinks">
+<a data-i18n="1" href="#about">About</a>
+<a data-i18n="2" href="#skills">Skills</a>
+<a data-i18n="3" href="#experience">Experience</a>
+<a data-i18n="4" href="#projects">Projects</a>
+<a data-i18n="demo_nav" href="#demos">Try it</a>
+<a data-i18n="5" href="#education">Education</a>
+<a data-i18n="6" href="#contact">Contact</a>
+</nav>
+<button aria-expanded="false" aria-label="Toggle menu" class="icon-btn menu-btn" data-i18n="7" id="menu">☰</button>
+<button aria-label="Switch language / 言語切り替え" class="icon-btn lang-btn" id="lang" title="日本語に切り替え">日本語</button>
+    <button aria-label="Toggle dark mode" class="icon-btn" data-i18n="8" id="theme">◐</button>
+</div>
+</header>
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+<div class="wrap">
+<div>
+<h1 data-i18n="9">Jaydeep Foujdar</h1>
+<div class="role" data-i18n="10">Lead Project Engineer — Cloud &amp; SaaS</div>
+<p class="bio" data-i18n="11">
+        I build the data and application layer that manufacturing runs on — Azure data platforms,
+        enterprise digitization on Power Platform, and AI automation. Six years across embedded
+        systems, quality engineering and cloud, delivered end-to-end in Japanese and English from Tokyo.
+      </p>
+<div class="loc" data-i18n="12">
+<span>📍 Tokyo, Japan</span>
+<span>🗣 English (TOEIC 990) · Japanese (JLPT N1)</span>
+</div>
+<div class="cta">
+<a class="btn btn-primary" data-i18n="13" download="" href="Jaydeep_Foujdar_Resume.pdf">↓ Download resume</a>
+<a class="btn btn-ghost" data-i18n="14" href="https://www.linkedin.com/in/jaydeepfoujdar/" rel="noopener" target="_blank">in · LinkedIn</a>
+<a class="btn btn-ghost" data-i18n="15" href="mailto:jaydeepfoujdar@duck.com">✉ Email me</a>
+</div>
+</div>
+<aside class="stat-card">
+<h4 data-i18n="16">At a glance</h4>
+<div class="stat" data-i18n="17"><b>Experience</b><span>6 years · Japan &amp; India</span></div>
+<div class="stat" data-i18n="18"><b>Focus</b><span>Cloud data · Digitization · AI</span></div>
+<div class="stat" data-i18n="19"><b>Recognition</b><span>CEO Award for DX</span></div>
+<div class="stat" data-i18n="20"><b>Certification</b><span>DX Specialist Lv3</span></div>
+<div class="stat" data-i18n="21"><b>Japanese</b><span>JLPT N1 (133/180)</span></div>
+<div class="stat" data-i18n="22"><b>English</b><span>TOEIC 990/990</span></div>
+</aside>
+</div>
+</section>
+<!-- ================= ABOUT ================= -->
+<section id="about">
+<div class="wrap rv">
+<div class="eyebrow" data-i18n="23">About</div>
+<h2 data-i18n="24">Engineer who starts with the business problem</h2>
+<p class="lead" data-i18n="25">
+      My work sits where operations meet technology. I began in embedded software writing control
+      algorithms for automotive seating, moved into designing systems that replace manual factory
+      processes, and now lead cloud data platform work — building metadata-driven pipelines,
+      governed data lakes and AI agents for an enterprise operating across Japan and overseas.
+    </p>
+<p class="lead" data-i18n="26">
+      What connects those roles is the approach: run the requirements analysis myself, talk directly
+      to the people doing the work, design for the team who will maintain it, and measure the result
+      in money or minutes saved. I work bilingually — gathering requirements on a factory floor in
+      Japanese and specifying architecture with global stakeholders in English — and I mentor junior
+      engineers as a matter of course.
+    </p>
+<p class="lead" data-i18n="27">
+<strong>Currently open to opportunities</strong> in cloud data engineering, solution
+      architecture and digital transformation roles.
+    </p>
+</div>
+</section>
+<!-- ================= SKILLS ================= -->
+<section id="skills" style="background:var(--bg-alt)">
+<div class="wrap rv">
+<div class="eyebrow" data-i18n="28">Skills</div>
+<h2 data-i18n="29">Technical toolkit</h2>
+<p class="lead" data-i18n="30">Technologies I have shipped production work with.</p>
+<div class="grid g3" style="margin-top:30px">
+<div class="card">
+<div class="skill-head"><span class="dot"></span><h3 data-i18n="31">Cloud &amp; Data Engineering</h3></div>
+<div class="tags" data-i18n="32">
+<span class="tag">Azure Data Factory V2</span>
+<span class="tag">ADLS Gen2</span>
+<span class="tag">Metadata-driven pipelines</span>
+<span class="tag">Zone-based lake architecture</span>
+<span class="tag">Data integration</span>
+<span class="tag">Power BI</span>
+</div>
+</div>
+<div class="card">
+<div class="skill-head"><span class="dot"></span><h3 data-i18n="33">Identity &amp; Governance</h3></div>
+<div class="tags" data-i18n="34">
+<span class="tag">Microsoft Entra ID</span>
+<span class="tag">RBAC</span>
+<span class="tag">POSIX ACLs</span>
+<span class="tag">Access design</span>
+</div>
+</div>
+<div class="card">
+<div class="skill-head"><span class="dot"></span><h3 data-i18n="35">Low-Code &amp; Automation</h3></div>
+<div class="tags" data-i18n="36">
+<span class="tag">Power Apps (Canvas)</span>
+<span class="tag">Power Fx</span>
+<span class="tag">Power Platform</span>
+<span class="tag">SharePoint Online</span>
+<span class="tag">Workflow automation</span>
+</div>
+</div>
+<div class="card">
+<div class="skill-head"><span class="dot"></span><h3 data-i18n="37">AI &amp; Agents</h3></div>
+<div class="tags" data-i18n="38">
+<span class="tag">Custom AI agents</span>
+<span class="tag">Agent flows</span>
+<span class="tag">Process automation</span>
+<span class="tag">AI-powered service desk</span>
+</div>
+</div>
+<div class="card">
+<div class="skill-head"><span class="dot"></span><h3 data-i18n="39">Embedded Systems</h3></div>
+<div class="tags" data-i18n="40">
+<span class="tag">Embedded C</span>
+<span class="tag">STM32 MCU</span>
+<span class="tag">IAR Embedded Workbench</span>
+<span class="tag">Sensor &amp; signal processing</span>
+<span class="tag">Control algorithms</span>
+</div>
+</div>
+<div class="card">
+<div class="skill-head"><span class="dot"></span><h3 data-i18n="41">Quality &amp; Delivery</h3></div>
+<div class="tags" data-i18n="42">
+<span class="tag">Requirements analysis</span>
+<span class="tag">System design</span>
+<span class="tag">Apache JMeter</span>
+<span class="tag">Postman</span>
+<span class="tag">Test planning</span>
+<span class="tag">Stakeholder management</span>
+<span class="tag">Mentoring</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ================= EXPERIENCE ================= -->
+<section id="experience">
+<div class="wrap rv">
+<div class="eyebrow" data-i18n="43">Experience</div>
+<h2 data-i18n="44">Where I have worked</h2>
+<div class="tl" style="margin-top:34px">
+<div class="job">
+<div class="job-top">
+<div>
+<h3 data-i18n="45">Lead Project Engineer — Cloud and SaaS</h3>
+<div class="org" data-i18n="46">TACHI-S · Tokyo, Japan</div>
+</div>
+<div class="when" data-i18n="47">April 2025 – Present</div>
+</div>
+<ul>
+<li data-i18n="48">Build and operate <strong>Azure Data Factory V2</strong> pipelines handling datasets of up to a million rows per run.</li>
+<li data-i18n="49">Design reusable, <strong>metadata-driven pipeline frameworks</strong> that cut new source onboarding time by up to 60% and removed hardcoded client/table dependencies — avoiding license upgrade costs.</li>
+<li data-i18n="50">Implement a <strong>zone-based ADLS Gen2 architecture</strong> with Entra ID RBAC and POSIX ACLs, eliminating vendor support expenses for approximately <strong>10M JPY</strong> in savings.</li>
+<li data-i18n="51">Designed and deployed <strong>13+ custom AI agents</strong> and agent flows, reducing manual request processing time by 40%.</li>
+</ul>
+</div>
+<div class="job">
+<div class="job-top">
+<div>
+<h3 data-i18n="52">Senior System Engineer — PaaS</h3>
+<div class="org" data-i18n="53">TACHI-S · Tokyo, Japan</div>
+</div>
+<div class="when" data-i18n="54">April 2024 – March 2025</div>
+</div>
+<ul>
+<li data-i18n="55">Developed and implemented an <strong>end-of-line automation system</strong> for real-time defect monitoring in close collaboration with the onsite team, saving <strong>7.8M JPY</strong> through in-house development.</li>
+<li data-i18n="56">Digitized an existing paper-based process with a <strong>Power Apps application for iPad</strong>, streamlining shop-floor data entry and monitoring — delivered within budget and ahead of schedule.</li>
+<li data-i18n="57">Led requirements analysis, system design and mentorship of junior engineers across multiple concurrent projects.</li>
+</ul>
+</div>
+<div class="job">
+<div class="job-top">
+<div>
+<h3 data-i18n="58">System Engineer — Embedded Software</h3>
+<div class="org" data-i18n="59">TACHI-S · Tokyo, Japan</div>
+</div>
+<div class="when" data-i18n="60">April 2022 – March 2024</div>
+</div>
+<ul>
+<li data-i18n="61">Developed a <strong>car seat adjustment algorithm</strong> for the company's CASE architecture on STM32-series MCUs with IAR Workbench APIs — reducing adjustment time by over 43% and improving user convenience by 25%.</li>
+<li data-i18n="62">Built a <strong>driver drowsiness detection algorithm</strong> using seat-embedded sensors to read posture, body movement and vital signs — contributing to a <strong>proprietary</strong> detection system.</li>
+</ul>
+</div>
+<div class="job">
+<div class="job-top">
+<div>
+<h3 data-i18n="63">QA Analyst — Web Development</h3>
+<div class="org" data-i18n="64">Hirameki Solutions · Pune, India</div>
+</div>
+<div class="when" data-i18n="65">November 2020 – March 2022</div>
+</div>
+<ul>
+<li data-i18n="66">Transitioned <strong>Eiken tests</strong> from paper-based to an online platform serving <strong>30,000+ students</strong>.</li>
+<li data-i18n="67">Authored comprehensive test plans and analyzed performance with <strong>Apache JMeter</strong> and <strong>Postman</strong>, identifying and resolving two login-related security bugs.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- ================= PROJECTS ================= -->
+<section id="projects" style="background:var(--bg-alt)">
+<div class="wrap rv">
+<div class="eyebrow" data-i18n="68">Projects</div>
+<h2 data-i18n="69">Selected work</h2>
+<p class="lead" data-i18n="70">
+      A closer look at what I designed and built. Client-specific details are generalized —
+      see the confidentiality note below.
+    </p>
+<!-- FEATURED -->
+<div class="feat" style="margin-top:32px">
+<div class="feat-head">
+<span class="badge" data-i18n="71">Featured project</span>
+<h3 data-i18n="72">Production Line Defect Data Digitization Platform</h3>
+<div class="sub" data-i18n="73">
+          Power Apps (Canvas) · Power Fx · SharePoint Online · iPad — automotive manufacturing ·
+          Role: Lead developer &amp; system designer
+        </div>
+</div>
+<div class="feat-body">
+<div>
+<div class="blk">
+<h4 data-i18n="74">Overview</h4>
+<p data-i18n="75">
+              On the assembly line, parts pulled out for a quality concern were tracked entirely on
+              paper. A defect was written on a slip, walked to the repair area, fixed, checked and
+              filed — which meant no real-time visibility, no reliable link between a defect and its
+              repair record, handwriting-dependent data quality, and days of manual effort before
+              anyone could analyze trends.
+            </p>
+<p data-i18n="76" style="margin-top:12px">
+              I designed and built a tablet application that replaces the paper slip with a single
+              traceable digital record. Each part is registered once at the moment it is pulled from
+              the line, then carried through every downstream step by a unique tracking ID, so the
+              defect report, the repair work, the verification results and the final quality
+              judgement all resolve to one record that can be queried instantly.
+            </p>
+</div>
+<div class="blk">
+<h4 data-i18n="77">What I designed &amp; built</h4>
+<ul>
+<li data-i18n="78"><strong>Staged workflow engine.</strong> A status-code state machine advances each record through five sequential stages. Every screen validates the record's current stage before allowing input, so steps cannot be skipped, duplicated or completed out of order.</li>
+<li data-i18n="79"><strong>Master-data-driven input.</strong> Operators select from centrally managed master lists rather than typing free text — defect categories, cause classifications, process locations and personnel are all governed centrally, keeping the captured data clean and analysis-ready.</li>
+<li data-i18n="80"><strong>Barcode-first UX.</strong> Scanning the part label populates identity fields automatically and routes the operator straight to the correct next step, minimizing typing with gloves on a noisy line.</li>
+<li data-i18n="81"><strong>Photographic evidence capture.</strong> Built-in camera steps attach before/after images to the record, giving quality engineers visual context that paper never provided.</li>
+<li data-i18n="82"><strong>Role-aware accountability.</strong> Reporter, repairer and inspector are captured as distinct roles at each stage, with a fast in-app operator switch designed for shared shop-floor tablets.</li>
+<li data-i18n="83"><strong>Review &amp; search layer.</strong> A dedicated set of screens lets supervisors filter historical records by period, line and category to review what happened without touching the raw data store.</li>
+<li data-i18n="84"><strong>Reliability by design.</strong> Confirmation dialogs before every commit, transactional multi-record writes, and input validation with plain-language error messages — designed so a mis-tap never corrupts a traceable record.</li>
+</ul>
+</div>
+<div class="blk">
+<h4 data-i18n="85">Scale &amp; engineering approach</h4>
+<p data-i18n="86">
+              The delivered application spans roughly <strong>45 screens</strong> and
+              <strong>20,000+ lines of Power Fx</strong>, backed by <strong>30+ structured data
+              entities</strong> split between governed master data and transactional records. To keep
+              a codebase that size maintainable, I standardized a small set of reusable interaction
+              patterns — paginated selection dialogs, the photo-capture step, the confirm-then-commit
+              save routine and shared validation logic — and applied them consistently across every
+              stage. I also authored full Japanese technical documentation so the in-house team could
+              own the system after handover.
+            </p>
+</div>
+</div>
+<div>
+<div class="blk">
+<h4 data-i18n="87">Outcome</h4>
+<div class="metrics">
+<div class="metric" data-i18n="88"><b>Paper → 0</b><span>Slips eliminated from the process</span></div>
+<div class="metric" data-i18n="89"><b>Real time</b><span>Status visible while work is in progress</span></div>
+<div class="metric" data-i18n="90"><b>End-to-end</b><span>Traceability from defect to disposition</span></div>
+<div class="metric" data-i18n="91"><b>In-house</b><span>Built internally, avoiding vendor cost</span></div>
+</div>
+<p data-i18n="92" style="margin-top:14px;font-size:.9rem">
+              Beyond the paperwork saved, the real gain was analytical: quality trends that
+              previously required manual tallying became a query, giving engineers the evidence
+              base to target recurring defects at the source.
+            </p>
+</div>
+<div class="blk">
+<h4 data-i18n="93">Stack</h4>
+<div class="tags" data-i18n="94">
+<span class="tag">Power Apps Canvas</span>
+<span class="tag">Power Fx</span>
+<span class="tag">SharePoint Online</span>
+<span class="tag">iPad / tablet UX</span>
+<span class="tag">Barcode scanning</span>
+<span class="tag">Camera capture</span>
+</div>
+</div>
+</div>
+</div>
+<div style="padding:0 28px 4px">
+<div class="diagram">
+<div class="dg-title" data-i18n="95">The five-stage traceable workflow — one record, tracked end to end</div>
+<div class="dg-scroll">
+<div class="flowchart">
+<div class="node" data-i18n="96"><b>1 · Defect report</b><span>Part registered &amp; tracking ID issued at the line</span></div>
+<div class="arrow" data-i18n="97">→</div>
+<div class="node" data-i18n="98"><b>2 · Repair, first pass</b><span>Cause, action and photo evidence recorded</span></div>
+<div class="arrow" data-i18n="99">→</div>
+<div class="node" data-i18n="100"><b>3 · Measurement check</b><span>Objective verification of the repair</span></div>
+<div class="arrow" data-i18n="101">→</div>
+<div class="node" data-i18n="102"><b>4 · Repair, second pass</b><span>Rework path taken when the check fails</span></div>
+<div class="arrow" data-i18n="103">→</div>
+<div class="node hl" data-i18n="104"><b>5 · Final judgement</b><span>Inspector confirms disposition &amp; closes the record</span></div>
+</div>
+</div>
+<div class="gov-bar" data-i18n="105"><b>Stage gating</b> — every screen validates the record’s current stage before accepting input, so steps cannot be skipped, duplicated or completed out of order</div>
+</div>
+</div>
+<div style="padding:18px 28px 26px">
+<div class="note" data-i18n="106">
+<span>🔒</span>
+<span>
+<b>Confidentiality note.</b> This project was developed internally at my employer.
+            The description above covers only the business problem, my engineering approach and
+            architectural patterns. All proprietary details — internal system naming, site and
+            line identifiers, data schemas and field names, defect and part codes, and operational
+            figures — are deliberately excluded. No employer data, source code or screenshots are
+            published here.
+          </span>
+</div>
+</div>
+</div>
+<!-- OTHER PROJECTS -->
+<div class="grid g2">
+<details class="card proj-card">
+<summary>
+<div class="cat" data-i18n="107">Cloud Data Platform</div>
+<h3 data-i18n="108">SAP-to-Lake Metadata-Driven Pipeline Framework</h3>
+<p data-i18n="109">
+            Reusable Azure Data Factory framework that extracts SAP and internal system data through
+            CDS views, transforms it into report-ready datasets and lands it in ADLS Gen2. Sources,
+            tables and mappings are declared as metadata rather than hardcoded into pipelines — so
+            onboarding a new source became a configuration entry instead of a development cycle,
+            cutting onboarding time by up to 60% while handling up to a million rows per run.
+          </p>
+<div class="tags" data-i18n="110">
+<span class="tag plain">SAP CDS Views</span>
+<span class="tag plain">Azure Data Factory V2</span>
+<span class="tag plain">ADLS Gen2</span>
+<span class="tag plain">Metadata-driven design</span>
+</div>
+<span class="expand" data-i18n="111"><span class="lbl-shut">View details</span><span class="lbl-open">Hide details</span><span class="chev">▼</span></span>
+</summary>
+<div class="detail">
+<div class="blk">
+<h4 data-i18n="112">The problem</h4>
+<p data-i18n="113">
+              The data the business needed for reporting lived inside SAP and other internal systems,
+              where it is structured for transactions rather than analysis. Every new reporting
+              requirement turned into its own extraction job with source names, table names and
+              mappings written directly into the pipeline — meaning more pipelines to maintain,
+              duplicated logic, and a development cycle standing between a question and its answer.
+            </p>
+</div>
+<div class="diagram">
+<div class="dg-title" data-i18n="114">End-to-end data flow</div>
+<div class="dg-scroll">
+<div class="flowchart">
+<div class="node" data-i18n="115"><b>SAP &amp; internal systems</b><span>Systems of record</span></div>
+<div class="arrow" data-i18n="116">→</div>
+<div class="node" data-i18n="117"><b>CDS views</b><span>Semantic extraction layer</span></div>
+<div class="arrow" data-i18n="118">→</div>
+<div class="node" data-i18n="119"><b>Azure Data Factory V2</b><span>Scheduled extraction</span></div>
+<div class="arrow" data-i18n="120">→</div>
+<div class="node" data-i18n="121"><b>Transformation</b><span>Report-ready shaping</span></div>
+<div class="arrow" data-i18n="122">→</div>
+<div class="node hl" data-i18n="123"><b>ADLS Gen2</b><span>Governed lake storage</span></div>
+<div class="arrow" data-i18n="124">→</div>
+<div class="node" data-i18n="125"><b>Power BI</b><span>Reports &amp; dashboards for the business</span></div>
+</div>
+</div>
+</div>
+<div class="blk">
+<h4 data-i18n="126">How the pipeline works</h4>
+<ul class="flow">
+<li data-i18n="127"><span class="n">1</span><span><b>Expose at source via CDS views</b>Rather than reading raw SAP tables, extraction runs against CDS views — the joins, filters and business meaning are resolved at the source, so what leaves the system is already a coherent, analysis-ready dataset instead of a pile of technical tables.</span></li>
+<li data-i18n="128"><span class="n">2</span><span><b>Extract with Azure Data Factory V2</b>Scheduled ADF pipelines connect to those views and pull the data on a defined cadence, handling datasets of up to a million rows per run.</span></li>
+<li data-i18n="129"><span class="n">3</span><span><b>Transform into report-ready datasets</b>The extracted data is shaped to match how the business actually reads it — applying the joins, aggregations and business rules that turn source records into reporting output.</span></li>
+<li data-i18n="130"><span class="n">4</span><span><b>Load into ADLS Gen2</b>Transformed output is written into the appropriate zone of the data lake, where it is governed and retained as the single trusted source for consumption.</span></li>
+<li data-i18n="131"><span class="n">5</span><span><b>Serve through Power BI</b>Reports and dashboards read from the curated layer rather than connecting back to SAP directly — so reporting load never touches the transactional system, and every report resolves to the same governed dataset.</span></li>
+</ul>
+</div>
+<div class="blk">
+<h4 data-i18n="132">The design decision that mattered</h4>
+<p data-i18n="133">
+              Instead of building one pipeline per source, I built a small set of generic,
+              parameterized pipelines driven by metadata. Which source, which CDS view, which
+              mappings and which destination are all held as configuration — the pipeline reads that
+              configuration at runtime and executes accordingly.
+            </p>
+<div class="ba">
+<div class="ba-box">
+<h5 data-i18n="134">Before</h5>
+<p data-i18n="135">New source → new pipeline built by hand, with client and table names hardcoded inside it. Logic duplicated across every pipeline; object count grows without limit.</p>
+</div>
+<div class="vs" data-i18n="136">→</div>
+<div class="ba-box good">
+<h5 data-i18n="137">After</h5>
+<p data-i18n="138">New source → new metadata entry. One framework serves every source, so logic is fixed in one place and the pipeline estate stops multiplying.</p>
+</div>
+</div>
+<p data-i18n="139" style="margin-top:12px">
+              The practical payoff was threefold: onboarding time for a new source dropped by up to
+              60%, hardcoded client and table dependencies disappeared, and because the framework
+              kept the pipeline footprint small, the platform stayed within its existing licensing
+              tier — avoiding an upgrade cost entirely.
+            </p>
+</div>
+<div class="blk">
+<h4 data-i18n="140">Outcome</h4>
+<div class="metrics">
+<div class="metric" data-i18n="141"><b>Up to 60%</b><span>Faster onboarding of a new data source</span></div>
+<div class="metric" data-i18n="142"><b>~1M rows</b><span>Handled per pipeline run</span></div>
+<div class="metric" data-i18n="143"><b>Zero</b><span>Hardcoded client/table dependencies</span></div>
+<div class="metric" data-i18n="144"><b>Avoided</b><span>License tier upgrade cost</span></div>
+</div>
+</div>
+<div class="blk">
+<h4 data-i18n="145">Stack</h4>
+<div class="tags" data-i18n="146">
+<span class="tag">SAP CDS views</span>
+<span class="tag">Azure Data Factory V2</span>
+<span class="tag">Parameterized pipelines</span>
+<span class="tag">ADLS Gen2</span>
+<span class="tag">Metadata-driven architecture</span>
+<span class="tag">Power BI</span>
+</div>
+</div>
+<div class="collapse-bar">
+<button class="collapse" data-i18n="147" type="button"><span aria-hidden="true">▲</span> Hide details</button>
+<span class="end-note" data-i18n="148">End of project details</span>
+</div>
+</div>
+</details>
+<details class="card proj-card">
+<summary>
+<div class="cat" data-i18n="149">Data Governance</div>
+<h3 data-i18n="150">Zone-Based Data Lake with Access Governance</h3>
+<p data-i18n="151">
+            The storage and security foundation the pipelines land into: a layered ADLS Gen2 lake
+            that separates as-ingested data from transformed and report-ready data, secured with
+            Microsoft Entra ID RBAC combined with POSIX ACLs so each team reaches exactly the data
+            it should. Bringing the design and operation in-house removed external vendor support
+            costs — approximately 10M JPY in savings.
+          </p>
+<div class="tags" data-i18n="152">
+<span class="tag plain">ADLS Gen2</span>
+<span class="tag plain">Entra ID · RBAC</span>
+<span class="tag plain">POSIX ACLs</span>
+</div>
+<span class="expand" data-i18n="153"><span class="lbl-shut">View details</span><span class="lbl-open">Hide details</span><span class="chev">▼</span></span>
+</summary>
+<div class="detail">
+<div class="blk">
+<h4 data-i18n="154">The problem</h4>
+<p data-i18n="155">
+              Once SAP and internal system data began flowing into the lake at volume, two questions
+              needed answering before it could be trusted as a platform: where does data live at each
+              stage of its life, and who is allowed to see it? Without a deliberate answer, a data
+              lake accumulates into a swamp — files in ad-hoc locations, no distinction between raw
+              and trusted data, and access granted far too broadly because it is the easy option.
+            </p>
+</div>
+<div class="diagram">
+<div class="dg-title" data-i18n="156">Lake zones &amp; access control</div>
+<div class="dg-scroll">
+<div class="flowchart">
+<div class="node" data-i18n="157"><b>Raw zone</b><span>Exactly as extracted from source — immutable landing</span></div>
+<div class="arrow" data-i18n="158">→</div>
+<div class="node" data-i18n="159"><b>Refined zone</b><span>Cleansed &amp; conformed working data</span></div>
+<div class="arrow" data-i18n="160">→</div>
+<div class="node hl" data-i18n="161"><b>Curated zone</b><span>Report-ready datasets served to Power BI</span></div>
+</div>
+</div>
+<div class="gov-bar" data-i18n="162">
+<b>Access layer</b> — Entra ID RBAC at the storage and container level, POSIX ACLs at the directory level
+            </div>
+</div>
+<div class="blk">
+<h4 data-i18n="163">How it is structured</h4>
+<ul>
+<li data-i18n="164"><strong>Zone separation.</strong> Data moves through distinct zones as it earns trust — landed exactly as extracted, then cleansed and conformed, then curated into the report-ready form consumers query. Anyone reading from the lake knows what guarantees the data carries purely from where it sits.</li>
+<li data-i18n="165"><strong>Two-layer access model.</strong> Entra ID RBAC governs who can reach the storage account and its containers; POSIX ACLs apply fine-grained permissions down at the directory level. Coarse control establishes the boundary, fine control decides precisely which folders a team touches.</li>
+<li data-i18n="166"><strong>Predictable paths.</strong> A consistent directory convention means the ADF framework writes to a location derivable from metadata, rather than one configured by hand per pipeline — the storage design and the pipeline design reinforce each other.</li>
+<li data-i18n="167"><strong>Least privilege by default.</strong> Read access to curated output is not the same as write access to raw landing zones; the model separates the two rather than granting broad access for convenience.</li>
+</ul>
+</div>
+<div class="blk">
+<h4 data-i18n="168">Outcome</h4>
+<div class="metrics">
+<div class="metric" data-i18n="169"><b>~10M JPY</b><span>Saved by eliminating vendor support costs</span></div>
+<div class="metric" data-i18n="170"><b>In-house</b><span>Design and operation owned internally</span></div>
+<div class="metric" data-i18n="171"><b>Least privilege</b><span>Team-level access, directory precision</span></div>
+<div class="metric" data-i18n="172"><b>Trusted zones</b><span>Clear separation of raw vs. report-ready</span></div>
+</div>
+<p data-i18n="173" style="margin-top:14px;font-size:.9rem">
+              The cost saving came from capability rather than negotiation: once the architecture was
+              designed and operated internally, the external support arrangement it had depended on
+              was no longer needed.
+            </p>
+</div>
+<div class="blk">
+<h4 data-i18n="174">Stack</h4>
+<div class="tags" data-i18n="175">
+<span class="tag">ADLS Gen2</span>
+<span class="tag">Microsoft Entra ID</span>
+<span class="tag">RBAC</span>
+<span class="tag">POSIX ACLs</span>
+<span class="tag">Zone architecture</span>
+</div>
+</div>
+<div class="collapse-bar">
+<button class="collapse" data-i18n="176" type="button"><span aria-hidden="true">▲</span> Hide details</button>
+<span class="end-note" data-i18n="177">End of project details</span>
+</div>
+</div>
+</details>
+<details class="card proj-card">
+<summary>
+<div class="cat" data-i18n="178">AI &amp; Automation</div>
+<h3 data-i18n="179">Enterprise AI Agent Suite</h3>
+<p data-i18n="180">
+            Designed and deployed 13+ custom AI agents and agent flows that absorb repetitive
+            request handling across internal teams, cutting manual processing time by 40%. Extended
+            into AI-powered global IT helpdesk initiatives, coordinating requirements with
+            stakeholders across international offices.
+          </p>
+<div class="tags" data-i18n="181">
+<span class="tag plain">AI agents</span>
+<span class="tag plain">Agent flows</span>
+<span class="tag plain">Process automation</span>
+</div>
+<span class="expand" data-i18n="182"><span class="lbl-shut">View details</span><span class="lbl-open">Hide details</span><span class="chev">▼</span></span>
+</summary>
+<div class="detail">
+<div class="blk">
+<h4 data-i18n="183">Context</h4>
+<p data-i18n="184">
+              A large share of internal support capacity was going into requests that were repetitive
+              and rule-based — the kind of work that is individually small but collectively expensive,
+              and that delays the requester while it waits in a human queue.
+            </p>
+</div>
+<div class="diagram">
+<div class="dg-title" data-i18n="185">Request handling flow</div>
+<div class="dg-scroll">
+<div class="flowchart">
+<div class="node" data-i18n="186"><b>Incoming request</b><span>From internal teams</span></div>
+<div class="arrow" data-i18n="187">→</div>
+<div class="node" data-i18n="188"><b>AI agent</b><span>Interprets intent</span></div>
+<div class="arrow" data-i18n="189">→</div>
+<div class="node" data-i18n="190"><b>Agent flow</b><span>Executes the routine steps</span></div>
+<div class="arrow" data-i18n="191">→</div>
+<div class="node hl" data-i18n="192"><b>Resolved</b><span>Escalated to a human only when needed</span></div>
+</div>
+</div>
+</div>
+<div class="blk">
+<h4 data-i18n="193">What I did</h4>
+<ul>
+<li data-i18n="194">Identified which request categories were genuinely rule-based and therefore safe to automate, and which needed to stay with a person.</li>
+<li data-i18n="195">Designed and deployed <strong>13+ custom agents and agent flows</strong>, each scoped to a specific request type rather than one general-purpose assistant.</li>
+<li data-i18n="196">Drove <strong>AI-powered global IT helpdesk</strong> initiatives, gathering requirements and aligning stakeholders across international teams.</li>
+</ul>
+</div>
+<div class="blk">
+<h4 data-i18n="197">Outcome</h4>
+<div class="metrics">
+<div class="metric" data-i18n="198"><b>40%</b><span>Reduction in manual processing time</span></div>
+<div class="metric" data-i18n="199"><b>13+</b><span>Agents and agent flows in production</span></div>
+</div>
+</div>
+<div class="collapse-bar">
+<button class="collapse" data-i18n="200" type="button"><span aria-hidden="true">▲</span> Hide details</button>
+<span class="end-note" data-i18n="201">End of project details</span>
+</div>
+</div>
+</details>
+<details class="card proj-card">
+<summary>
+<div class="cat" data-i18n="202">Manufacturing Systems</div>
+<h3 data-i18n="203">End-of-Line Automation &amp; Defect Monitoring</h3>
+<p data-i18n="204">
+            Real-time defect monitoring at the end of the production line, developed hand-in-hand with
+            the onsite team so the system matched how the line actually operates. Delivering it
+            in-house rather than through a vendor saved 7.8M JPY and kept the knowledge — and the
+            ability to iterate — inside the company.
+          </p>
+<div class="tags" data-i18n="205">
+<span class="tag plain">Real-time monitoring</span>
+<span class="tag plain">System design</span>
+<span class="tag plain">Onsite collaboration</span>
+</div>
+<span class="expand" data-i18n="206"><span class="lbl-shut">View details</span><span class="lbl-open">Hide details</span><span class="chev">▼</span></span>
+</summary>
+<div class="detail">
+<div class="blk">
+<h4 data-i18n="207">Context</h4>
+<p data-i18n="208">
+              Defect information at the end of the production line was not visible in real time,
+              which meant issues were understood after the fact rather than while the line was still
+              running — exactly when intervention is cheapest.
+            </p>
+</div>
+<div class="blk">
+<h4 data-i18n="209">What I did</h4>
+<ul>
+<li data-i18n="210">Led requirements analysis and system design in <strong>direct collaboration with the onsite team</strong>, so the solution reflected how the line genuinely operates rather than how it looks on paper.</li>
+<li data-i18n="211">Developed and implemented the monitoring system <strong>in-house</strong>, avoiding an external vendor build.</li>
+<li data-i18n="212">Managed delivery to milestones, and mentored junior engineers working across the same set of projects.</li>
+</ul>
+</div>
+<div class="blk">
+<h4 data-i18n="213">Outcome</h4>
+<div class="metrics">
+<div class="metric" data-i18n="214"><b>7.8M JPY</b><span>Saved through in-house development</span></div>
+<div class="metric" data-i18n="215"><b>Real time</b><span>Defect visibility while the line runs</span></div>
+</div>
+</div>
+<div class="note" data-i18n="216" style="margin-top:20px">
+<span>🔒</span>
+<span><b>Confidentiality note.</b> Described at the level of problem, approach and outcome only. Line configurations, equipment details and operational data are excluded.</span>
+</div>
+<div class="collapse-bar">
+<button class="collapse" data-i18n="217" type="button"><span aria-hidden="true">▲</span> Hide details</button>
+<span class="end-note" data-i18n="218">End of project details</span>
+</div>
+</div>
+</details>
+<details class="card proj-card">
+<summary>
+<div class="cat" data-i18n="219">Embedded · Automotive</div>
+<h3 data-i18n="220">Seat Control &amp; Drowsiness Detection</h3>
+<p data-i18n="221">
+            Two embedded algorithms for automotive seating on STM32-series MCUs: a seat adjustment
+            routine that cut adjustment time by over 43%, and a drowsiness detection algorithm reading
+            posture, movement and vital signs from seat-embedded sensors — work that contributed to a
+            proprietary detection system.
+          </p>
+<div class="tags" data-i18n="222">
+<span class="tag plain">Embedded C</span>
+<span class="tag plain">STM32</span>
+<span class="tag plain">IAR Workbench</span>
+<span class="tag plain">Sensor fusion</span>
+</div>
+<span class="expand" data-i18n="223"><span class="lbl-shut">View details</span><span class="lbl-open">Hide details</span><span class="chev">▼</span></span>
+</summary>
+<div class="detail">
+<div class="blk">
+<h4 data-i18n="224">Seat adjustment algorithm</h4>
+<p data-i18n="225">
+              Built for the company's CASE architecture on STM32-series microcontrollers using IAR
+              Workbench APIs. The algorithm reduced seat adjustment time by <strong>over 43%</strong>
+              and improved measured user convenience by <strong>25%</strong> — a change felt directly
+              by the occupant every time they use the seat.
+            </p>
+</div>
+<div class="blk">
+<h4 data-i18n="226">Driver drowsiness detection</h4>
+<p data-i18n="227">
+              A safety-focused algorithm using sensors embedded in the driver seat to detect the onset
+              of drowsiness through changes in posture, body movement and vital signs. Reading these
+              signals from the seat itself makes detection passive — nothing to wear and nothing to
+              switch on. The work contributed to a <strong>proprietary</strong> detection system.
+            </p>
+</div>
+<div class="blk">
+<h4 data-i18n="228">Stack</h4>
+<div class="tags" data-i18n="229">
+<span class="tag">Embedded C</span>
+<span class="tag">STM32 MCU</span>
+<span class="tag">IAR Embedded Workbench</span>
+<span class="tag">Sensor signal processing</span>
+</div>
+</div>
+<div class="collapse-bar">
+<button class="collapse" data-i18n="230" type="button"><span aria-hidden="true">▲</span> Hide details</button>
+<span class="end-note" data-i18n="231">End of project details</span>
+</div>
+</div>
+</details>
+<details class="card proj-card">
+<summary>
+<div class="cat" data-i18n="232">Web · Quality Engineering</div>
+<h3 data-i18n="233">Eiken Online Examination Platform</h3>
+<p data-i18n="234">
+            Quality ownership for the migration of Eiken English examinations from paper to an online
+            platform serving 30,000+ students. Built the test plans, ran performance analysis with
+            Apache JMeter and Postman, and found and drove resolution of two login-related security
+            bugs before launch.
+          </p>
+<div class="tags" data-i18n="235">
+<span class="tag plain">Test strategy</span>
+<span class="tag plain">Apache JMeter</span>
+<span class="tag plain">Postman</span>
+<span class="tag plain">Security testing</span>
+</div>
+<span class="expand" data-i18n="236"><span class="lbl-shut">View details</span><span class="lbl-open">Hide details</span><span class="chev">▼</span></span>
+</summary>
+<div class="detail">
+<div class="blk">
+<h4 data-i18n="237">Context</h4>
+<p data-i18n="238">
+              Moving a formal examination online raises the stakes on quality: <strong>30,000+
+              students</strong> sit the test, load arrives all at once rather than spread out, and a
+              failure during a live exam cannot be retried later.
+            </p>
+</div>
+<div class="blk">
+<h4 data-i18n="239">What I did</h4>
+<ul>
+<li data-i18n="240">Authored <strong>comprehensive test plans</strong> covering the platform ahead of launch.</li>
+<li data-i18n="241">Ran performance and API analysis with <strong>Apache JMeter</strong> and <strong>Postman</strong> to understand behaviour under exam-day load.</li>
+<li data-i18n="242">Identified and drove resolution of <strong>two login-related security bugs</strong> — found before launch, on the authentication path every student passes through.</li>
+</ul>
+</div>
+<div class="blk">
+<h4 data-i18n="243">Outcome</h4>
+<div class="metrics">
+<div class="metric" data-i18n="244"><b>30,000+</b><span>Students served by the platform</span></div>
+<div class="metric" data-i18n="245"><b>2</b><span>Security bugs caught pre-launch</span></div>
+</div>
+</div>
+<div class="collapse-bar">
+<button class="collapse" data-i18n="246" type="button"><span aria-hidden="true">▲</span> Hide details</button>
+<span class="end-note" data-i18n="247">End of project details</span>
+</div>
+</div>
+</details>
+</div>
+</div>
+</section>
+<!-- ================= DEMOS ================= -->
+<section id="demos">
+<div class="wrap rv">
+<div class="eyebrow" data-i18n="demo_eyebrow">Try it yourself</div>
+<h2 data-i18n="demo_h2">Four working demos</h2>
+<p class="lead" data-i18n="demo_lead">Rather than describe how I build things, here are four small working pieces you can use. Each opens here on the page and takes under a minute.</p>
+<div class="grid g2" style="margin-top:30px">
+
+<div class="card demo-card">
+<div class="cat" data-i18n="demo_c1cat">AI &amp; Automation</div>
+<h3 data-i18n="demo_c1t">IT Helpdesk Triage Agent</h3>
+<p data-i18n="demo_c1d">Type a request and watch the agent classify intent, extract entities, apply policy, then resolve it or escalate. Shows what it deliberately refuses to automate.</p>
+<button class="btn-demo" data-demo="agent-demo.html" data-t-en="IT Helpdesk Triage Agent" data-t-ja="ITヘルプデスク振り分けエージェント"><span data-i18n="demo_open">Open demo</span> <span aria-hidden="true">↗</span></button>
+</div>
+
+<div class="card demo-card">
+<div class="cat" data-i18n="demo_c2cat">Cloud Data Platform</div>
+<h3 data-i18n="demo_c2t">Pipeline Builder</h3>
+<p data-i18n="demo_c2d">Onboard three data sources the hardcoded way, then the metadata-driven way. Count the clicks — the 60% difference is something you feel rather than read.</p>
+<button class="btn-demo" data-demo="pipeline-game.html" data-t-en="Pipeline Builder — hardcoded vs metadata-driven" data-t-ja="パイプライン構築ゲーム ― 個別実装 vs メタデータ駆動"><span data-i18n="demo_open">Open demo</span> <span aria-hidden="true">↗</span></button>
+</div>
+
+<div class="card demo-card">
+<div class="cat" data-i18n="demo_c3cat">Manufacturing Systems</div>
+<h3 data-i18n="demo_c3t">Defect Workflow Simulator</h3>
+<p data-i18n="demo_c3d">Step onto the line as the operator: scan a part, repair it, verify it, close it. Try to skip a stage — the workflow will stop you, and that is the point.</p>
+<button class="btn-demo" data-demo="defect-simulator.html" data-t-en="Shop-Floor Defect Workflow Simulator" data-t-ja="現場不良ワークフロー シミュレーター"><span data-i18n="demo_open">Open demo</span> <span aria-hidden="true">↗</span></button>
+</div>
+
+<div class="card demo-card">
+<div class="cat" data-i18n="demo_c5cat">Embedded · Automotive</div>
+<h3 data-i18n="demo_c5t">Power Seat &amp; Memory Recall</h3>
+<p data-i18n="demo_c5d">Drive a car seat with live motor speed profiles, store a memory position and recall it. Switch between moving the axes one at a time and all together — the timeline shows exactly where the time goes.</p>
+<button class="btn-demo" data-demo="seat-demo.html" data-t-en="Power Seat &amp; Memory Recall" data-t-ja="パワーシートとメモリー呼び出し"><span data-i18n="demo_open">Open demo</span> <span aria-hidden="true">↗</span></button>
+</div>
+
+</div>
+</div>
+</section>
+
+<div class="modal" id="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+<div class="modal-in">
+<div class="modal-bar">
+<b id="modalTitle"></b>
+<span class="sp"></span>
+<a id="modalNew" href="#" target="_blank" rel="noopener" data-i18n="demo_newtab">Open in new tab ↗</a>
+<button id="modalClose" aria-label="Close demo">&#10005;</button>
+</div>
+<iframe id="modalFrame" title="Interactive demo" loading="lazy"></iframe>
+</div>
+</div>
+
+<!-- ================= EDUCATION ================= -->
+<section id="education">
+<div class="wrap rv">
+<div class="eyebrow" data-i18n="248">Education</div>
+<h2 data-i18n="249">Academic background</h2>
+<div class="grid g2" style="margin-top:30px">
+<div class="card">
+<div class="edu">
+<div>
+<h3 data-i18n="250">MBA — Information Technology &amp; Systems Management</h3>
+<div class="org" data-i18n="251">Narsee Monjee Institute of Management Studies (NMIMS)</div>
+</div>
+</div>
+<p data-i18n="252" style="color:var(--muted);font-size:.89rem;margin:12px 0 0">
+          Mumbai, India · Distance Education<br/>January 2022 – December 2023
+        </p>
+</div>
+<div class="card">
+<div class="edu">
+<div>
+<h3 data-i18n="253">B.E. — Electronics &amp; Telecommunications Engineering</h3>
+<div class="org" data-i18n="254">Savitribai Phule Pune University (SPPU)</div>
+</div>
+</div>
+<p data-i18n="255" style="color:var(--muted);font-size:.89rem;margin:12px 0 0">
+          Pune, India · GPA 7.16 / 10<br/>August 2016 – May 2020
+        </p>
+</div>
+</div>
+<div class="grid g2" style="margin-top:22px">
+<div class="card">
+<div class="skill-head"><span class="dot"></span><h3 data-i18n="256">Achievements</h3></div>
+<ul class="award-list">
+<li data-i18n="257"><span class="mk">★</span><span><strong>CEO Award for DX</strong> on the VA Project — Tachi-S</span></li>
+<li data-i18n="258"><span class="mk">★</span><span><strong>JLPT N1</strong> certification — 133/180</span></li>
+<li data-i18n="259"><span class="mk">★</span><span><strong>TOEIC</strong> certification — perfect 990/990</span></li>
+<li data-i18n="260"><span class="mk">★</span><span><strong>Letter of Appreciation</strong> from the Director — Hirameki Solutions</span></li>
+<li data-i18n="261"><span class="mk">★</span><span><strong>1st Rank</strong>, Advanced Diploma in Japanese Language — 299/300</span></li>
+</ul>
+</div>
+<div class="card">
+<div class="skill-head"><span class="dot"></span><h3 data-i18n="262">Leadership</h3></div>
+<ul class="award-list">
+<li data-i18n="263"><span class="mk">▸</span><span>Certified <strong>DX Specialist Lv3</strong></span></li>
+<li data-i18n="264"><span class="mk">▸</span><span>Primary <strong>SPOC for 3 concurrent domestic projects</strong> across Japan</span></li>
+<li data-i18n="265"><span class="mk">▸</span><span><strong>Onboarding buddy</strong> for Indian engineers joining in Japan</span></li>
+<li data-i18n="266"><span class="mk">▸</span><span>Drove <strong>AI-powered Global IT Helpdesk</strong> initiatives with stakeholders across global teams</span></li>
+<li data-i18n="267"><span class="mk">▸</span><span>Mentored junior engineers through requirements analysis and system design</span></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- ================= CONTACT ================= -->
+<section class="contact" id="contact">
+<div class="wrap rv">
+<div class="eyebrow" data-i18n="268">Contact</div>
+<h2 data-i18n="269">Let's talk</h2>
+<p data-i18n="270">
+      I'm open to roles in cloud data engineering, solution architecture and digital
+      transformation — in Japan or remote. The fastest way to reach me is email or LinkedIn.
+    </p>
+<div class="cta">
+<a class="btn btn-primary" data-i18n="271" href="mailto:jaydeepfoujdar@duck.com">✉ Email</a>
+<a class="btn btn-ghost" data-i18n="272" href="https://www.linkedin.com/in/jaydeepfoujdar/" rel="noopener" target="_blank">in · LinkedIn</a>
+</div>
+</div>
+</section>
+<footer data-i18n="273">
+  © <span id="yr">2026</span> Jaydeep Foujdar · Tokyo, Japan · Built as a static site — no trackers, no cookies.
+</footer>
+<script>
+(function(){
+
+  // ---------- demo modal (iframe-isolated, lazy-loaded) ----------
+  var modal=document.getElementById('modal'),
+      mFrame=document.getElementById('modalFrame'),
+      mTitle=document.getElementById('modalTitle'),
+      mNew=document.getElementById('modalNew'),
+      lastFocus=null, currentDemo=null;
+
+  function demoLang(){ return document.documentElement.getAttribute('lang')==='ja' ? 'ja' : 'en'; }
+  function demoURL(file){ return file+'?lang='+demoLang(); }
+
+  function openDemo(btn){
+    currentDemo=btn.getAttribute('data-demo');
+    lastFocus=btn;
+    var t=btn.getAttribute(demoLang()==='ja'?'data-t-ja':'data-t-en')||'';
+    mTitle.textContent=t;
+    mFrame.setAttribute('src',demoURL(currentDemo));
+    mNew.setAttribute('href',demoURL(currentDemo));
+    modal.className='modal on';
+    modal.setAttribute('aria-hidden','false');
+    document.body.className=(document.body.className+' locked').trim();
+    document.getElementById('modalClose').focus();
+  }
+  function closeDemo(){
+    modal.className='modal';
+    modal.setAttribute('aria-hidden','true');
+    mFrame.setAttribute('src','about:blank');   // stop the demo cleanly
+    currentDemo=null;
+    document.body.className=document.body.className.replace(' locked','').replace('locked','');
+    if(lastFocus) lastFocus.focus();
+  }
+  // keeps an open demo in step with the site language toggle
+  function syncDemoLang(){
+    if(!currentDemo) return;
+    var btn=document.querySelector('.btn-demo[data-demo="'+currentDemo+'"]');
+    if(btn) mTitle.textContent=btn.getAttribute(demoLang()==='ja'?'data-t-ja':'data-t-en')||'';
+    mFrame.setAttribute('src',demoURL(currentDemo));
+    mNew.setAttribute('href',demoURL(currentDemo));
+  }
+
+  var dbtns=document.querySelectorAll('.btn-demo');
+  for(var di=0;di<dbtns.length;di++){
+    dbtns[di].addEventListener('click',function(){ openDemo(this); });
+  }
+  document.getElementById('modalClose').addEventListener('click',closeDemo);
+  modal.addEventListener('click',function(e){ if(e.target===modal) closeDemo(); });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&modal.className.indexOf('on')!==-1) closeDemo();
+  });
+
+  // ---------- language switching (EN / 日本語) ----------
+  var JA = {"demo_c5cat":"組込み・自動車","demo_c5t":"パワーシートとメモリー呼び出し","demo_c5d":"モーターの速度変化を見ながらシートを動かし、位置を記憶させて呼び出せます。各軸を1つずつ動かす方式と同時に動かす方式を切り替えると、時間がどこに使われているかがタイムラインで一目で分かります。","demo_nav":"デモ","demo_eyebrow":"実際に触れる","demo_h2":"4つの体験デモ","demo_lead":"どう作るかを説明するより、実際に触れていただくほうが早いと考えました。以下の4つはこのページ上で開き、いずれも1分以内でお試しいただけます。","demo_open":"デモを開く","demo_newtab":"新しいタブで開く ↗","demo_c1cat":"AI・業務自動化","demo_c1t":"ITヘルプデスク振り分けエージェント","demo_c1d":"依頼を入力すると、エージェントが意図を分類し、項目を抽出し、ポリシーを確認したうえで、自動対応するか担当者へ引き継ぎます。あえて自動化しない領域も示しています。","demo_c2cat":"クラウドデータ基盤","demo_c2t":"パイプライン構築ゲーム","demo_c2d":"3つのデータソースを、まず個別実装で、次にメタデータ駆動で追加します。操作回数を数えてみてください。60％という差を、読むのではなく体感できます。","demo_c3cat":"生産システム","demo_c3t":"不良ワークフロー シミュレーター","demo_c3d":"現場の作業者として、部品をスキャンし、手直しし、確認し、記録を完了します。工程を飛ばそうとすると止められます ― それこそが設計の要点です。","demo_c4cat":"データガバナンス","demo_c4t":"最小権限パズル","demo_c4d":"各チームに各ゾーンのPOSIX ACLを設定すると、Entra IDのRBACロールが自動的に決まります。所要30秒、そして誤り方は2種類あります。","0":"Jaydeep <span>Foujdar</span>","1":"自己紹介","2":"スキル","3":"職務経歴","4":"プロジェクト","5":"学歴・実績","6":"お問い合わせ","7":"☰","8":"◐","9":"Jaydeep Foujdar（ジェイディープ・フォウジダール）","10":"リードプロジェクトエンジニア ｜ クラウド・SaaS","11":"製造業の現場を支えるデータ基盤とアプリケーションを構築しています。Azureによるデータ基盤、Power Platformを用いた業務のデジタル化、AIによる自動化が主な領域です。組込みソフトウェア、品質保証、クラウドと6年間にわたり幅広く経験を積み、東京を拠点に日英両言語で上流から運用まで一貫して担当しています。","12":"<span>📍 東京都</span> <span>🗣 英語（TOEIC 990点）・日本語（JLPT N1）</span>","13":"↓ 職務経歴書をダウンロード","14":"in · LinkedIn","15":"✉ メールでご連絡","16":"プロフィール概要","17":"<b>経験年数</b><span>6年（日本・インド）</span>","18":"<b>専門領域</b><span>クラウドデータ・DX・AI</span>","19":"<b>受賞</b><span>CEO賞（DX部門）</span>","20":"<b>社内認定</b><span>DXスペシャリスト Lv3</span>","21":"<b>日本語</b><span>JLPT N1（133/180点）</span>","22":"<b>英語</b><span>TOEIC 990/990点</span>","23":"自己紹介","24":"技術ではなく、業務課題から考えるエンジニア","25":"私の仕事は、現場の業務と技術が交わる場所にあります。キャリアは自動車用シートの制御アルゴリズムを書く組込みソフトウェア開発から始まり、その後、工場の手作業を置き換えるシステムの設計へと移りました。現在は、日本国内および海外拠点を対象に、メタデータ駆動のデータパイプライン、ガバナンスの効いたデータレイク、AIエージェントの構築といったクラウドデータ基盤の案件をリードしています。","26":"これらの職務に一貫しているのは、進め方そのものです。要件定義は自ら行い、実際に業務を担っている方々と直接対話し、引き継ぐ運用担当者の視点で設計し、成果はコストまたは作業時間という数字で確認します。工場の現場では日本語で要件を伺い、海外の関係部門とは英語でアーキテクチャを詰めるという二言語での進行を日常としており、後進の育成も継続して担っています。","27":"現在、<strong>クラウドデータエンジニアリング、ソリューションアーキテクト、DX推進</strong>の分野で新たな機会を探しております。","28":"スキル","29":"技術スタック","30":"実務で成果に結びつけてきた技術です。","31":"クラウド・データ基盤","32":"<span class=\"tag\">Azure Data Factory V2</span> <span class=\"tag\">ADLS Gen2</span> <span class=\"tag\">メタデータ駆動パイプライン</span> <span class=\"tag\">ゾーン構成データレイク</span> <span class=\"tag\">データ連携</span> <span class=\"tag\">Power BI</span>","33":"ID管理・ガバナンス","34":"<span class=\"tag\">Microsoft Entra ID</span> <span class=\"tag\">RBAC</span> <span class=\"tag\">POSIX ACL</span> <span class=\"tag\">アクセス権限設計</span>","35":"ローコード開発・業務自動化","36":"<span class=\"tag\">Power Apps（キャンバスアプリ）</span> <span class=\"tag\">Power Fx</span> <span class=\"tag\">Power Platform</span> <span class=\"tag\">SharePoint Online</span> <span class=\"tag\">ワークフロー自動化</span>","37":"AI・エージェント","38":"<span class=\"tag\">カスタムAIエージェント</span> <span class=\"tag\">エージェントフロー</span> <span class=\"tag\">業務プロセス自動化</span> <span class=\"tag\">AI活用ヘルプデスク</span>","39":"組込みシステム","40":"<span class=\"tag\">組込みC</span> <span class=\"tag\">STM32 MCU</span> <span class=\"tag\">IAR Embedded Workbench</span> <span class=\"tag\">センサー・信号処理</span> <span class=\"tag\">制御アルゴリズム</span>","41":"品質保証・プロジェクト推進","42":"<span class=\"tag\">要件定義</span> <span class=\"tag\">システム設計</span> <span class=\"tag\">Apache JMeter</span> <span class=\"tag\">Postman</span> <span class=\"tag\">テスト計画</span> <span class=\"tag\">関係部門調整</span> <span class=\"tag\">後進育成</span>","43":"職務経歴","44":"これまでの経歴","45":"リードプロジェクトエンジニア ｜ クラウド・SaaS","46":"株式会社タチエス · 東京","47":"2025年4月 〜 現在","48":"1回の実行で最大100万件規模のデータセットを扱う<strong>Azure Data Factory V2</strong>のパイプラインを構築・運用。","49":"再利用可能な<strong>メタデータ駆動型のパイプライン基盤</strong>を設計。新規データソースの追加期間を最大60％短縮するとともに、接続先やテーブル名のハードコーディングを排除し、ライセンス上位プランへの移行費用も回避。","50":"Entra IDのRBACとPOSIX ACLを組み合わせた<strong>ゾーン構成のADLS Gen2アーキテクチャ</strong>を実装。外部ベンダーの保守費用を不要とし、<strong>約1,000万円</strong>のコスト削減を実現。","51":"<strong>13種類以上のカスタムAIエージェント</strong>およびエージェントフローを設計・導入し、手作業による申請処理時間を40％削減。","52":"シニアシステムエンジニア ｜ PaaS","53":"株式会社タチエス · 東京","54":"2024年4月 〜 2025年3月","55":"不良をリアルタイムで把握する<strong>ライン最終工程の自動化システム</strong>を、現場担当者と密に連携しながら開発・導入。内製化により<strong>約780万円</strong>のコストを削減。","56":"紙運用だった既存業務を<strong>iPad向けPower Appsアプリケーション</strong>により電子化し、現場でのデータ入力と進捗管理を効率化。予算内かつ予定より前倒しでリリース。","57":"複数案件を並行して担当し、要件定義・システム設計に加え、若手エンジニアの指導も担当。","58":"システムエンジニア ｜ 組込みソフトウェア","59":"株式会社タチエス · 東京","60":"2022年4月 〜 2024年3月","61":"STM32シリーズのマイコンとIAR Workbench APIを用い、自社のCASEアーキテクチャ向け<strong>シート調整アルゴリズム</strong>を開発。調整時間を43％以上短縮し、使いやすさの評価を25％向上。","62":"シートに内蔵したセンサーから姿勢・体動・バイタルの変化を読み取る<strong>ドライバー眠気検知アルゴリズム</strong>を開発。<strong>特許取得済み</strong>の検知システムに貢献。","63":"QAアナリスト ｜ Web開発","64":"Hirameki Solutions · インド・プネー","65":"2020年11月 〜 2022年3月","66":"<strong>英検</strong>の試験を紙媒体から<strong>受験者3万人以上</strong>規模のオンラインプラットフォームへ移行。","67":"網羅的なテスト計画を作成し、<strong>Apache JMeter</strong>および<strong>Postman</strong>で性能を分析。ログイン関連のセキュリティ不具合2件を検出し、解消まで対応。","68":"プロジェクト","69":"主なプロジェクト","70":"設計・構築を担当した業務の詳細です。お客様および自社に関わる固有の情報は一般化して記載しております。詳細は下記の機密保持に関する注記をご覧ください。","71":"注目プロジェクト","72":"生産ライン不良データ電子化プラットフォーム","73":"Power Apps（キャンバスアプリ）· Power Fx · SharePoint Online · iPad ｜ 自動車部品製造 ｜ 担当：開発リード・システム設計","74":"概要","75":"生産ラインでは、品質上の懸念によりラインから抜き取られた部品は、すべて紙の帳票で管理されていました。不良内容を伝票に手書きし、手直しエリアへ運び、手直し・確認を経て保管するという流れです。そのため、進捗をリアルタイムに把握できない、不良の記録と手直しの記録が確実に紐付かない、データの品質が手書きに左右される、傾向を分析するまでに何日も手作業を要する、といった課題がありました。","76":"そこで、紙の伝票を1件のトレーサブルな電子記録に置き換えるタブレットアプリケーションを設計・構築しました。部品はラインから抜き取られた時点で一度だけ登録され、以降は固有の追跡IDによって後工程へ引き継がれます。これにより、不良の報告内容、手直しの作業内容、検証結果、最終的な品質判定のすべてが1件の記録に集約され、必要なときにすぐ検索できるようになりました。","77":"設計・構築した内容","78":"<strong>工程管理の仕組み（ステータス管理）。</strong> ステータスコードによる状態管理により、各記録を5つの工程へ順番に進めます。すべての画面で入力前に現在の工程を検証するため、工程の飛ばし・二重登録・順序の入れ替わりが起こりません。","79":"<strong>マスタ連動の入力方式。</strong> 作業者は自由入力ではなく、一元管理されたマスタから選択します。不良区分、原因分類、工程名、担当者のいずれも中央で管理されるため、蓄積されるデータが整い、そのまま分析に使える状態を保てます。","80":"<strong>バーコード起点の操作設計。</strong> 部品ラベルを読み取るだけで識別情報が自動入力され、次に行うべき工程へ直接遷移します。手袋を着用し騒音のある現場でも、入力の手間を最小限に抑えられます。","81":"<strong>写真による証跡の記録。</strong> アプリ内のカメラ機能で手直し前後の画像を記録に添付します。紙では残せなかった視覚的な情報を、品質担当者が確認できるようになりました。","82":"<strong>役割ごとの責任の明確化。</strong> 報告者・手直し担当者・確認者を各工程で別々に記録します。現場で共用するタブレットでの利用を前提に、担当者の切り替えを素早く行える仕組みとしました。","83":"<strong>照会・検索機能。</strong> 管理者向けに専用画面を用意し、期間・ライン・区分で過去の記録を絞り込んで確認できます。元データを直接操作する必要はありません。","84":"<strong>確実に動く仕組みづくり。</strong> 登録前の確認ダイアログ、複数レコードの一括登録、平易な文言のエラーメッセージによる入力チェックを備え、誤操作によってトレーサビリティのある記録が壊れないよう設計しました。","85":"規模と開発の進め方","86":"完成したアプリケーションは<strong>約45画面</strong>、<strong>Power Fxで20,000行以上</strong>の規模となり、<strong>30以上のデータ構造</strong>（一元管理するマスタデータと、日々発生する実績データ）に支えられています。この規模でも保守しやすい状態を保つため、ページ送り付きの選択ダイアログ、写真撮影の処理、確認後に一括保存する処理、共通の入力チェックといった再利用可能な部品を標準化し、すべての工程で同じ形に統一しました。あわせて日本語の技術ドキュメントを整備し、引き継ぎ後は社内チームが自ら保守・改修できる状態としました。","87":"成果","88":"<b>紙 → 0</b><span>帳票を業務から全廃</span>","89":"<b>リアルタイム</b><span>作業中の進捗をその場で把握</span>","90":"<b>一気通貫</b><span>不良発生から最終判定まで追跡</span>","91":"<b>内製</b><span>社内開発により外注費用を回避</span>","92":"帳票作業の削減以上に大きかったのは、分析面での効果です。これまで手作業で集計していた品質傾向が検索で確認できるようになり、繰り返し発生する不良に対して、根本原因から手を打つための根拠を技術者が持てるようになりました。","93":"使用技術","94":"<span class=\"tag\">Power Apps キャンバスアプリ</span> <span class=\"tag\">Power Fx</span> <span class=\"tag\">SharePoint Online</span> <span class=\"tag\">iPad・タブレットUI</span> <span class=\"tag\">バーコード読み取り</span> <span class=\"tag\">カメラ撮影</span>","95":"5工程を貫くトレーサビリティ ― 1件の記録で最後まで追跡","96":"<b>1 · 不良の報告</b><span>ライン上で部品を登録し追跡IDを発行</span>","97":"→","98":"<b>2 · 手直し（1回目）</b><span>原因・処置・写真の証跡を記録</span>","99":"→","100":"<b>3 · 測定による確認</b><span>手直し結果を客観的に検証</span>","101":"→","102":"<b>4 · 手直し（2回目）</b><span>確認で不合格の場合の再作業工程</span>","103":"→","104":"<b>5 · 最終判定</b><span>確認者が処置を判定し記録を完了</span>","105":"<b>工程のチェック機能</b> ― すべての画面で入力前に現在の工程を検証するため、工程の飛ばし・二重登録・順序の入れ替わりが発生しません","106":"<span>🔒</span> <span> <b>機密保持に関する注記。</b> 本プロジェクトは在職企業の社内案件として開発したものです。上記に記載しているのは、業務上の課題、私が取った技術的アプローチ、および設計の考え方に限られます。社内システムの名称、拠点・ラインの識別情報、データ構造や項目名、不良コードや部品コード、稼働実績の数値といった固有の情報は、意図的にすべて除いております。企業のデータ、ソースコード、画面イメージ等は一切掲載しておりません。 </span>","107":"クラウドデータ基盤","108":"SAPからデータレイクまでのメタデータ駆動型パイプライン基盤","109":"SAPおよび社内システムのデータをCDSビュー経由で抽出し、レポート用に加工したうえでADLS Gen2へ格納する、再利用可能なAzure Data Factoryの基盤です。接続先・テーブル・項目マッピングをパイプライン内に直接書き込むのではなくメタデータとして定義することで、新規データソースの追加が開発作業ではなく設定作業となり、追加期間を最大60％短縮しました。1回の実行で最大100万件規模のデータにも対応しています。","110":"<span class=\"tag plain\">SAP CDSビュー</span> <span class=\"tag plain\">Azure Data Factory V2</span> <span class=\"tag plain\">ADLS Gen2</span> <span class=\"tag plain\">メタデータ駆動設計</span>","111":"<span class=\"lbl-shut\">詳細を見る</span><span class=\"lbl-open\">詳細を閉じる</span><span class=\"chev\">▼</span>","112":"課題","113":"レポートに必要なデータはSAPをはじめとする社内システムの中にあり、いずれも分析ではなく日々の業務処理に適した形で格納されています。そのため新しいレポートの要望が出るたびに、接続先名・テーブル名・項目マッピングをパイプラインへ直接書き込んだ個別の抽出処理を作ることになり、保守対象のパイプラインが増え、同じロジックが重複し、知りたいことと答えの間に毎回開発期間が挟まる状態でした。","114":"データの流れ（全体像）","115":"<b>SAP・社内システム</b><span>基幹となる記録元</span>","116":"→","117":"<b>CDSビュー</b><span>意味づけを行う抽出層</span>","118":"→","119":"<b>Azure Data Factory V2</b><span>スケジュール実行による抽出</span>","120":"→","121":"<b>データ加工</b><span>レポート用の形へ整形</span>","122":"→","123":"<b>ADLS Gen2</b><span>ガバナンスの効いた格納先</span>","124":"→","125":"<b>Power BI</b><span>現場で使うレポート・ダッシュボード</span>","126":"パイプラインの処理の流れ","127":"<span class=\"n\">1</span><span><b>CDSビューで抽出元を整える</b>SAPのテーブルを直接読み取るのではなく、CDSビューに対して抽出を行います。結合・絞り込み・業務上の意味づけが抽出元の時点で解決されるため、システムから出てくる時点で、技術的なテーブルの寄せ集めではなく分析に使える整った形になっています。</span>","128":"<span class=\"n\">2</span><span><b>Azure Data Factory V2で抽出</b>スケジュール実行されるADFのパイプラインがCDSビューへ接続し、定めた頻度でデータを取得します。1回の実行で最大100万件規模のデータセットに対応します。</span>","129":"<span class=\"n\">3</span><span><b>レポート用データへ加工</b>抽出したデータを、実際に業務で見る形に合わせて整形します。元データをレポート出力へ変換するための結合・集計・業務ルールをここで適用します。</span>","130":"<span class=\"n\">4</span><span><b>ADLS Gen2へ格納</b>加工後のデータをデータレイクの該当ゾーンへ書き出します。ここで管理・保管され、利用時に参照する唯一の正しいデータとして扱われます。</span>","131":"<span class=\"n\">5</span><span><b>Power BIで提供</b>レポートやダッシュボードは、SAPへ直接接続するのではなく整備済みの層を参照します。これによりレポート利用の負荷が基幹システムに一切かからず、どのレポートも同じ管理されたデータを参照する状態を保てます。</span>","132":"設計上、最も重要だった判断","133":"データソースごとにパイプラインを作るのではなく、メタデータで動作を制御する汎用的なパイプラインを少数だけ用意しました。どの接続先か、どのCDSビューか、どの項目マッピングか、どこへ格納するかはすべて設定として保持し、パイプラインは実行時にその設定を読み取って動作します。","134":"改善前","135":"データソースが増えるたびにパイプラインを手作りし、接続先名やテーブル名をその中に直接記述。同じロジックがパイプラインごとに重複し、管理対象が際限なく増えていく状態。","136":"→","137":"改善後","138":"データソースが増えても、追加するのはメタデータの1件のみ。1つの基盤がすべての接続先に対応するため、ロジックの修正は1か所で済み、パイプラインが増え続けることもない。","139":"実務上の効果は3点ありました。新規データソースの追加期間が最大60％短縮されたこと、接続先やテーブル名のハードコーディングが解消されたこと、そしてパイプラインの数を抑えられたことで既存のライセンス範囲内に収まり、上位プランへの移行費用が発生しなかったことです。","140":"成果","141":"<b>最大60％短縮</b><span>新規データソース追加までの期間</span>","142":"<b>約100万件</b><span>1回の実行で処理するデータ量</span>","143":"<b>ゼロ</b><span>接続先・テーブル名のハードコーディング</span>","144":"<b>回避</b><span>ライセンス上位プランへの移行費用</span>","145":"使用技術","146":"<span class=\"tag\">SAP CDSビュー</span> <span class=\"tag\">Azure Data Factory V2</span> <span class=\"tag\">パラメータ化パイプライン</span> <span class=\"tag\">ADLS Gen2</span> <span class=\"tag\">メタデータ駆動アーキテクチャ</span> <span class=\"tag\">Power BI</span>","147":"<span aria-hidden=\"true\">▲</span> 詳細を閉じる","148":"プロジェクト詳細は以上です","149":"データガバナンス","150":"ゾーン構成データレイクとアクセス権限設計","151":"パイプラインの格納先となる、保管とセキュリティの土台です。取り込んだままのデータと、加工済み・レポート用のデータを層で分けたADLS Gen2のデータレイクを構築し、Microsoft Entra IDのRBACとPOSIX ACLを組み合わせて、各チームが必要な範囲のデータのみを参照できる状態としました。設計から運用までを内製化したことで、外部ベンダーの保守費用が不要となり、約1,000万円のコスト削減につながっています。","152":"<span class=\"tag plain\">ADLS Gen2</span> <span class=\"tag plain\">Entra ID · RBAC</span> <span class=\"tag plain\">POSIX ACL</span>","153":"<span class=\"lbl-shut\">詳細を見る</span><span class=\"lbl-open\">詳細を閉じる</span><span class=\"chev\">▼</span>","154":"課題","155":"SAPや社内システムのデータが本格的にデータレイクへ流れ始めた段階で、基盤として安心して使えるようにするために答えを出すべき問いが2つありました。データはその時々の状態に応じてどこに置かれるのか、そして誰がそれを見てよいのか、という点です。ここを意図的に設計しないままだと、データレイクは次第に扱いづらい状態に陥ります。ファイルが場当たり的な場所に置かれ、取り込んだままのデータと信頼できるデータの区別がつかなくなり、簡単だという理由で必要以上に広い権限が付与されてしまうためです。","156":"データレイクの層構成とアクセス制御","157":"<b>Rawゾーン</b><span>抽出したままの状態で保持する領域</span>","158":"→","159":"<b>Refinedゾーン</b><span>整形・標準化した作業用データ</span>","160":"→","161":"<b>Curatedゾーン</b><span>Power BIへ提供するレポート用データ</span>","162":"<b>アクセス制御層</b> ― ストレージおよびコンテナー単位はEntra IDのRBAC、ディレクトリ単位はPOSIX ACLで制御","163":"構成の考え方","164":"<strong>ゾーンによる分離。</strong> データは信頼できる状態になるに従い、異なるゾーンへ移動します。まず抽出したままの形で受け取り、次に整形・標準化し、最後に利用者が参照するレポート用の形へ整えます。データレイクを参照する側は、データがどこに置かれているかを見るだけで、その品質がどこまで担保されているかを判断できます。","165":"<strong>2層構成のアクセス制御。</strong> Entra IDのRBACでストレージアカウントとコンテナーへの到達可否を制御し、POSIX ACLでディレクトリ単位の細かい権限を適用します。大きな単位で境界を定め、細かい単位でどのフォルダーまで触れるかを決める構成です。","166":"<strong>予測できるパス設計。</strong> ディレクトリの命名規則を統一したことで、ADFの基盤はメタデータから導出できる場所へ書き出せます。パイプラインごとに格納先を手動で設定する必要がなく、保管の設計とパイプラインの設計が互いに噛み合う形になっています。","167":"<strong>最小権限を前提とする。</strong> レポート用データを参照する権限と、取り込み領域へ書き込む権限は別物として扱います。運用が楽だからという理由で広い権限をまとめて付与するのではなく、両者を明確に分離しています。","168":"成果","169":"<b>約1,000万円</b><span>ベンダー保守費用の削減額</span>","170":"<b>内製</b><span>設計から運用まで社内で担当</span>","171":"<b>最小権限</b><span>チーム単位・ディレクトリ単位で制御</span>","172":"<b>層の分離</b><span>取り込み状態とレポート用を明確に区別</span>","173":"このコスト削減は価格交渉によるものではなく、社内に技術を持てたことによる結果です。アーキテクチャを自ら設計し運用できるようになった時点で、それまで前提としていた外部ベンダーの保守契約自体が不要になりました。","174":"使用技術","175":"<span class=\"tag\">ADLS Gen2</span> <span class=\"tag\">Microsoft Entra ID</span> <span class=\"tag\">RBAC</span> <span class=\"tag\">POSIX ACL</span> <span class=\"tag\">ゾーン構成アーキテクチャ</span>","176":"<span aria-hidden=\"true\">▲</span> 詳細を閉じる","177":"プロジェクト詳細は以上です","178":"AI・業務自動化","179":"社内向けAIエージェント群の構築","180":"社内各部門で繰り返し発生する申請対応を引き受ける13種類以上のカスタムAIエージェントおよびエージェントフローを設計・導入し、手作業による処理時間を40％削減しました。さらにAIを活用したグローバルITヘルプデスクの取り組みへと展開し、海外拠点の関係者と要件を調整しながら推進しています。","181":"<span class=\"tag plain\">AIエージェント</span> <span class=\"tag plain\">エージェントフロー</span> <span class=\"tag plain\">業務プロセス自動化</span>","182":"<span class=\"lbl-shut\">詳細を見る</span><span class=\"lbl-open\">詳細を閉じる</span><span class=\"chev\">▼</span>","183":"背景","184":"社内サポートの工数の多くが、繰り返し発生し、判断基準も定まっている申請対応に費やされていました。1件ごとは小さくても全体では大きな負担となり、さらに担当者の対応待ちの間、依頼した側も待たされてしまう類の業務です。","185":"申請対応の流れ","186":"<b>申請の受付</b><span>社内各部門から</span>","187":"→","188":"<b>AIエージェント</b><span>依頼内容を判別</span>","189":"→","190":"<b>エージェントフロー</b><span>定型の処理を実行</span>","191":"→","192":"<b>対応完了</b><span>必要な場合のみ担当者へ引き継ぎ</span>","193":"担当した内容","194":"判断基準が明確で自動化しても問題のない申請区分と、人が対応すべき申請区分を切り分けました。","195":"汎用的なアシスタントを1つ作るのではなく、申請の種類ごとに役割を限定した<strong>13種類以上のカスタムエージェントおよびエージェントフロー</strong>を設計・導入しました。","196":"<strong>AIを活用したグローバルITヘルプデスク</strong>の取り組みを推進し、海外拠点を含む関係者から要件を集約し、合意形成を図りました。","197":"成果","198":"<b>40％削減</b><span>手作業による処理時間</span>","199":"<b>13種類以上</b><span>稼働中のエージェント・フロー</span>","200":"<span aria-hidden=\"true\">▲</span> 詳細を閉じる","201":"プロジェクト詳細は以上です","202":"生産システム","203":"ライン最終工程の自動化と不良監視","204":"生産ラインの最終工程における不良のリアルタイム監視システムです。現場の担当者と二人三脚で開発を進め、ラインの実際の動き方に合った仕組みとしました。ベンダーへ委託せず内製したことで約780万円を削減し、ノウハウと改善を続けられる体制を社内に残すことができました。","205":"<span class=\"tag plain\">リアルタイム監視</span> <span class=\"tag plain\">システム設計</span> <span class=\"tag plain\">現場との協働</span>","206":"<span class=\"lbl-shut\">詳細を見る</span><span class=\"lbl-open\">詳細を閉じる</span><span class=\"chev\">▼</span>","207":"背景","208":"生産ライン最終工程の不良情報がリアルタイムに把握できず、ラインが動いている最中ではなく事後に状況を把握する状態でした。本来、最も少ない手間で対策を打てるのはライン稼働中です。","209":"担当した内容","210":"<strong>現場担当者と直接協働</strong>しながら要件定義とシステム設計を主導し、書面上の想定ではなく実際のラインの動き方に沿った仕組みとしました。","211":"監視システムを<strong>内製</strong>で開発・導入し、外部ベンダーへの委託開発を回避しました。","212":"マイルストーンに沿った進行管理を行うとともに、同じ案件群に携わる若手エンジニアの指導も担当しました。","213":"成果","214":"<b>約780万円</b><span>内製化によるコスト削減</span>","215":"<b>リアルタイム</b><span>ライン稼働中に不良を把握</span>","216":"<span>🔒</span> <span><b>機密保持に関する注記。</b> 課題・アプローチ・成果の範囲に限って記載しております。ラインの構成、設備の詳細、稼働実績データは掲載しておりません。</span>","217":"<span aria-hidden=\"true\">▲</span> 詳細を閉じる","218":"プロジェクト詳細は以上です","219":"組込み・自動車","220":"シート制御と眠気検知","221":"STM32シリーズのマイコン上で動作する、自動車用シート向けの組込みアルゴリズム2件です。1件は調整時間を43％以上短縮したシート調整処理、もう1件はシートに内蔵したセンサーから姿勢・体動・バイタルを読み取る眠気検知アルゴリズムで、後者は特許取得済みの検知システムに貢献しました。","222":"<span class=\"tag plain\">組込みC</span> <span class=\"tag plain\">STM32</span> <span class=\"tag plain\">IAR Workbench</span> <span class=\"tag plain\">センサーフュージョン</span>","223":"<span class=\"lbl-shut\">詳細を見る</span><span class=\"lbl-open\">詳細を閉じる</span><span class=\"chev\">▼</span>","224":"シート調整アルゴリズム","225":"IAR Workbench APIを用い、STM32シリーズのマイコン上で動作する自社CASEアーキテクチャ向けに開発しました。本アルゴリズムによりシート調整時間を<strong>43％以上</strong>短縮し、使いやすさの評価を<strong>25％</strong>向上させています。シートを使うたびに、乗員が直接体感できる改善です。","226":"ドライバー眠気検知","227":"運転席シートに内蔵したセンサーで姿勢・体動・バイタルの変化をとらえ、眠気の兆候を検知する安全系のアルゴリズムです。シート自体からこれらの信号を読み取るため、装着するものも操作も不要な、意識させない検知方式となっています。本開発は<strong>特許取得済み</strong>の検知システムに貢献しました。","228":"使用技術","229":"<span class=\"tag\">組込みC</span> <span class=\"tag\">STM32 MCU</span> <span class=\"tag\">IAR Embedded Workbench</span> <span class=\"tag\">センサー信号処理</span>","230":"<span aria-hidden=\"true\">▲</span> 詳細を閉じる","231":"プロジェクト詳細は以上です","232":"Web・品質保証","233":"英検オンライン試験プラットフォーム","234":"英検の試験を紙媒体から受験者3万人以上規模のオンラインプラットフォームへ移行するにあたり、品質保証を担当しました。テスト計画を作成し、Apache JMeterとPostmanで性能を分析するとともに、ログイン関連のセキュリティ不具合2件をリリース前に検出し、解消まで対応しました。","235":"<span class=\"tag plain\">テスト戦略</span> <span class=\"tag plain\">Apache JMeter</span> <span class=\"tag plain\">Postman</span> <span class=\"tag plain\">セキュリティテスト</span>","236":"<span class=\"lbl-shut\">詳細を見る</span><span class=\"lbl-open\">詳細を閉じる</span><span class=\"chev\">▼</span>","237":"背景","238":"正式な資格試験をオンラインへ移行する以上、品質に求められる水準は一段と高くなります。<strong>3万人以上の受験者</strong>が試験を受け、アクセスは分散せず一斉に集中し、試験中の障害は後からやり直すことができないためです。","239":"担当した内容","240":"リリースに先立ち、プラットフォーム全体を網羅する<strong>テスト計画</strong>を作成しました。","241":"<strong>Apache JMeter</strong>と<strong>Postman</strong>で性能およびAPIの分析を行い、試験当日の負荷における挙動を確認しました。","242":"<strong>ログイン関連のセキュリティ不具合2件</strong>を検出し、解消まで推進しました。いずれも全受験者が必ず通る認証処理上の不具合で、リリース前に発見できたものです。","243":"成果","244":"<b>3万人以上</b><span>プラットフォームの利用者数</span>","245":"<b>2件</b><span>リリース前に検出したセキュリティ不具合</span>","246":"<span aria-hidden=\"true\">▲</span> 詳細を閉じる","247":"プロジェクト詳細は以上です","248":"学歴・実績","249":"学歴","250":"経営学修士（MBA）― 情報技術・システムマネジメント専攻","251":"Narsee Monjee Institute of Management Studies（NMIMS）","252":"インド・ムンバイ · 通信教育課程<br/>2022年1月 〜 2023年12月","253":"工学士 ― 電子・通信工学専攻","254":"Savitribai Phule Pune University（SPPU）","255":"インド・プネー · GPA 7.16 / 10<br/>2016年8月 〜 2020年5月","256":"実績・資格","257":"<span class=\"mk\">★</span><span><strong>CEO賞（DX部門）</strong> ― VAプロジェクトにて受賞・タチエス</span>","258":"<span class=\"mk\">★</span><span><strong>日本語能力試験 N1</strong> 合格 ― 133/180点</span>","259":"<span class=\"mk\">★</span><span><strong>TOEIC</strong> ― 満点990/990点</span>","260":"<span class=\"mk\">★</span><span><strong>ディレクター表彰</strong> ― Hirameki Solutions</span>","261":"<span class=\"mk\">★</span><span><strong>首席</strong>・日本語上級ディプロマ課程 ― 299/300点</span>","262":"社内での役割","263":"<span class=\"mk\">▸</span><span>社内認定 <strong>DXスペシャリスト Lv3</strong></span>","264":"<span class=\"mk\">▸</span><span>国内3案件を並行して担当する<strong>主担当窓口（SPOC）</strong></span>","265":"<span class=\"mk\">▸</span><span>来日したインド人エンジニアの<strong>受け入れ担当（オンボーディングバディ）</strong></span>","266":"<span class=\"mk\">▸</span><span>海外拠点の関係者とともに<strong>AI活用グローバルITヘルプデスク</strong>の取り組みを推進</span>","267":"<span class=\"mk\">▸</span><span>要件定義・システム設計を通じた若手エンジニアの指導</span>","268":"お問い合わせ","269":"ご連絡お待ちしております","270":"クラウドデータエンジニアリング、ソリューションアーキテクト、DX推進の分野で、日本国内またはリモートでの機会を探しております。ご連絡はメールまたはLinkedInが最も確実です。","271":"✉ メール","272":"in · LinkedIn","273":"© <span id=\"yr\">2026</span> Jaydeep Foujdar · 東京 · 静的サイトとして構築 ― トラッカー・Cookieは使用しておりません。"};
+  var META = {en:{"title": "Jaydeep Foujdar — Lead Project Engineer, Cloud & Data Platforms", "desc": "Jaydeep Foujdar — Lead Project Engineer (Cloud & SaaS) in Tokyo, Japan. Azure data platforms, Power Platform digitization, AI agents and embedded systems. JLPT N1, TOEIC 990.", "ogt": "Jaydeep Foujdar — Lead Project Engineer, Cloud & Data Platforms", "ogd": "Cloud data engineering, enterprise digitization and AI automation — delivered bilingually in Tokyo, Japan."}, ja:{"title": "Jaydeep Foujdar ｜ リードプロジェクトエンジニア（クラウド・データ基盤）", "desc": "Jaydeep Foujdar（ジェイディープ・フォウジダール）― 東京在住のリードプロジェクトエンジニア（クラウド・SaaS）。Azureデータ基盤、Power Platformによる業務のデジタル化、AIエージェント、組込みシステム。JLPT N1、TOEIC 990点。", "ogt": "Jaydeep Foujdar ｜ リードプロジェクトエンジニア（クラウド・データ基盤）", "ogd": "クラウドデータエンジニアリング、業務のデジタル化、AI自動化 ― 東京を拠点に日英両言語で対応します。"}};
+  var EN = {};
+  document.querySelectorAll('[data-i18n]').forEach(function(el){ EN[el.getAttribute('data-i18n')] = el.innerHTML; });
+  function setMeta(lang){
+    var m = META[lang];
+    document.title = m.title;
+    var d=document.querySelector('meta[name="description"]'); if(d) d.setAttribute('content',m.desc);
+    var ot=document.querySelector('meta[property="og:title"]'); if(ot) ot.setAttribute('content',m.ogt);
+    var od=document.querySelector('meta[property="og:description"]'); if(od) od.setAttribute('content',m.ogd);
+  }
+  function applyLang(lang){
+    var src = (lang==='ja') ? JA : EN;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var k=el.getAttribute('data-i18n');
+      if (src[k]!==undefined) el.innerHTML = src[k];
+    });
+    document.documentElement.setAttribute('lang',lang);
+    var yr=document.getElementById('yr'); if(yr) yr.textContent=new Date().getFullYear();
+    var lb=document.getElementById('lang');
+    if(lb){
+      lb.textContent = (lang==='ja') ? 'EN' : '日本語';
+      lb.setAttribute('title',(lang==='ja') ? 'Switch to English' : '日本語に切り替え');
+    }
+    setMeta(lang);
+    try{ localStorage.setItem('lang',lang); }catch(e){}
+    if (typeof layoutProjects === 'function') layoutProjects();
+    if (typeof syncDemoLang === 'function') syncDemoLang();
+  }
+  var startLang=null;
+  try{ startLang=localStorage.getItem('lang'); }catch(e){}
+  if(!startLang) startLang = (navigator.language||'').toLowerCase().indexOf('ja')===0 ? 'ja' : 'en';
+  applyLang(startLang);
+  var langBtn=document.getElementById('lang');
+  if(langBtn) langBtn.addEventListener('click',function(){
+    applyLang(document.documentElement.getAttribute('lang')==='ja' ? 'en' : 'ja');
+  });
+
+  // year
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // theme toggle (remembers choice)
+  var root = document.documentElement, tBtn = document.getElementById('theme');
+  var saved = null;
+  try { saved = localStorage.getItem('theme'); } catch(e){}
+  if (saved) root.setAttribute('data-theme', saved);
+  else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) root.setAttribute('data-theme','dark');
+  tBtn.addEventListener('click', function(){
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch(e){}
+  });
+
+  // mobile menu
+  var mBtn = document.getElementById('menu'), links = document.getElementById('navlinks');
+  mBtn.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    mBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  links.addEventListener('click', function(e){
+    if (e.target.tagName === 'A') { links.classList.remove('open'); mBtn.setAttribute('aria-expanded','false'); }
+  });
+
+  // project grid: expanded tile spans the full width in its own position,
+  // and any tile left alone beside it stretches so no empty gap remains
+  var pgrid = document.querySelector('#projects .grid');
+  function layoutProjects(){
+    if (!pgrid) return;
+    var tiles = Array.prototype.slice.call(pgrid.querySelectorAll('details.proj-card'));
+    tiles.forEach(function(t){ t.classList.remove('fill-row'); });
+    pgrid.classList.toggle('has-open', tiles.some(function(t){ return t.open; }));
+    var cols = getComputedStyle(pgrid).gridTemplateColumns.split(' ').filter(Boolean).length;
+    if (cols < 2) return;
+    var col = 0;
+    tiles.forEach(function(t){
+      if (t.open) {
+        if (col !== 0) {
+          var prev = t.previousElementSibling;
+          if (prev && !prev.open) prev.classList.add('fill-row');
+        }
+        col = 0;
+      } else {
+        col = (col + 1) % cols;
+      }
+    });
+  }
+  if (pgrid) {
+    pgrid.querySelectorAll('details.proj-card').forEach(function(d){
+      d.addEventListener('toggle', function(){
+        layoutProjects();
+        if (d.open) {
+          var y = d.getBoundingClientRect().top + window.scrollY - 80;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      });
+    });
+    window.addEventListener('resize', layoutProjects);
+    layoutProjects();
+  }
+
+  // collapse buttons inside expanded project tiles
+  document.querySelectorAll('.collapse').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var d = btn.closest('details');
+      if (!d) return;
+      d.open = false;
+      var y = d.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    });
+  });
+
+  // reveal on scroll
+  var items = document.querySelectorAll('.rv');
+  if (!('IntersectionObserver' in window)) {
+    items.forEach(function(el){ el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  items.forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>
